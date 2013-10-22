@@ -1,0 +1,68 @@
+
+<div class="row">
+  <form role="form" name="episodeForm" ng-controller="AdminEpisodeCtrl">
+    <div class="col-md-2">
+      <div class="form-group">
+        <label for="inputTitle">Tittel</label>
+        <input type="text"  name="title" class="form-control" ng-model="newEpisode.title" id="inputTitle" placeholder="Legg til tittel" />
+
+      </div>
+      <div class="form-group">
+        <label for="inputIngress">Ingress</label>
+        <input type="textarea" name="ingress" class="form-control" ng-model="newEpisode.ingress" id="inputIngress" placeholder="Legg til ingress" />
+        <span class="error" ng-show="episodeForm.ingress.$error.required">Required!</span>
+      </div>
+      <div class="form-group">
+        <label for="inputArticle">Artikkel</label>
+        <textarea class="form-control" rows="3" id="inputArticle" ng-model="newEpisode.text" placeholder="Legg til artikkel"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="inputArticle">Velg fil</label>
+        <select ng-model="selectedEpisode" ng-options="c.file for c in episodeFiles"/>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <div class="form-group">
+        <label for="exampleInputFile">Velg bilde</label>
+        <input type="file"  file-upload id="exampleInputFile" />
+        <img ng-src="{{image}}" />
+      </div>
+    </div>
+            <button class="btn btn-default" ng-click="saveEpisode()">Save</button>
+  </form>
+</div>
+
+
+<div class="row">
+  <div class="col-md-8">
+    <form role="form" name="episodeForm" ng-controller="AdminEpisodeCtrl">
+      <div class="form-group">
+        <label for="inputTitle">Tittel</label>
+        <input type="text"  name="title" class="form-control" ng-model="newEpisode.title" id="inputTitle" placeholder="Legg til tittel" required>    
+        <span class="error" ng-show="episodeForm.title.$error.required">Required!</span>
+        <br></div>
+        <div class="form-group">
+          <label for="inputIngress">Ingress</label>
+          <input type="textarea" name="ingress" class="form-control" ng-model="newEpisode.ingress" id="inputIngress" placeholder="Legg til ingress" required>    
+          <span class="error" ng-show="episodeForm.ingress.$error.required">Required!</span>
+          <br></div>
+          <div class="form-group">
+            <label for="inputArticle">Artikkel</label>
+            <textarea class="form-control" rows="3" id="inputArticle" ng-model="newEpisode.text" placeholder="Legg til artikkel"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="inputArticle">Velg fil</label>
+            <select ng-model="selectedEpisode" ng-options="c.file for c in episodeFiles">
+              <button class="btn btn-default" ng-click="saveEpisode()">Save</button>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="exampleInputFile">Velg bilde</label>
+              <input type="file"  file-upload id="exampleInputFile" />    
+              <p class="help-block">Example block-level help text here.</p>
+              <img ng-src="{{image}}" />    
+            </form>
+          </div>
+        </div>
+      </div>

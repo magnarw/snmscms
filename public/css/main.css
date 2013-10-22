@@ -1,0 +1,192 @@
+body {
+  font-family: 'Raleway', sans-serif;
+}
+
+.row:first-child {
+  margin-top: 0;
+}
+.row {
+  margin-top: 40px;
+}
+
+.adminrow {
+  margin-top: 80px;
+}
+
+.phone:before {
+    content:"☎";
+    font-size: 20px;
+    margin-right: 0.5em;
+}
+
+.phone {
+    border-bottom: dashed 1px; 
+    display: inline-block;
+    font-size: 20px;
+    word-wrap: normal;
+    margin-top: 25px;
+}
+.phone:hover {
+    color : grey;
+}
+
+.main-content {
+  margin-top: 50px;
+}
+
+/*
+==== Header - Navbar ====
+*/
+.navbar-brand {
+  padding: 2px 15px;
+}
+.navbar-brand .logo-img {
+  width: 46px;
+}
+/*.navbar-brand span {
+  padding: 15px 15px;
+}*/
+
+/* Carousel base class */
+.carousel {
+  margin-bottom: 20px;
+
+  /* Negative margin to pull up carousel. 90px is roughly margins and height of navbar. */
+  margin-top: 50px;
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  z-index: 10;
+}
+
+/* Declare heights because of positioning of img element */
+.carousel .item {
+  height: 500px;
+  width: 100%;
+  background-color: #777;
+}
+
+.carousel-caption h1 {
+  font-family: oswald, sans-serif;
+  background: black;
+  /* TODO : make responsive */
+  font-size: 60px;
+  color: white;
+  text-transform:uppercase;
+  display: inline-block;
+}
+
+.heading {
+  font-family: oswald, sans-serif;
+  background: black;
+  /* TODO : make responsive */
+  font-size: 60px;
+  color: white;
+  text-transform:uppercase;
+  display: inline-block;
+}
+
+#ingress {
+  font-family: oswald, sans-serif;
+  background: black;
+  color: white;
+  text-transform:uppercase;
+  display: inline-block;
+}
+
+.download {
+  margin-top:5px;
+}
+
+
+
+#item1 {
+  background: url( ../images/twobrotherspromo.jpg);
+  background-size: cover; 
+}
+
+#item2 {
+  background: url( ../images/fifa.jpg);
+  background-size: cover; 
+}
+
+.social {
+    display: block;
+    margin-top: 5px;
+}
+
+.hide {
+    display: none;
+}
+
+
+.imagewrap {
+  height: 222px; 
+  width: 300px;
+
+}
+
+.overlay {
+color: white;
+position: relative;
+bottom: 39px;
+width: 608px;
+height: 5%;
+background-color: black;
+opacity: .50;
+-moz-opacity: 0.50;
+filter: alpha(opacity=50);
+
+
+}
+
+.overlaytext {
+color: white;
+padding-left: 5px;
+padding-top: 6px;
+
+opacity: 1;
+-moz-opacity:1 ;
+filter: alpha(opacity=100);
+}
+
+
+.feeds {
+
+  list-style-type: none;
+  padding-left: 0px;
+}
+
+
+.feeds li {
+  margin-top: 20px;
+  float: left;
+}
+
+/*
+==== Content Area ====
+*/
+.sk-content img {
+  margin-bottom: 10px;
+}
+.sk-content {
+  margin-top: 75px;
+}
+h1.section-header {
+  font-weight: 900;
+  font-size: 2em;
+  position: relative;
+}
+img.content-image {
+  max-width: 100%;
+}
+
+/*
+==== Episodes ====
+*/
+.gridStyle {
+    border: 1px solid rgb(212,212,212);
+    width: 400px;
+    margin-top: 10px; 
+    height: 220px;
+}
