@@ -11,8 +11,8 @@ app.configure(function(){
   app.use(express.bodyParser({uploadDir:'/bilder/'}));
   app.use(express.methodOverride());
 
-app.get('/api/prayer', routes.getPrayerTimes);
-app.get('/api/prayer/*', routes.getPrayerTimesForDay);
+//app.get('/api/prayer', routes.getPrayerTimes);
+app.get('/api/prayer/year/:year/month/:month/day/:day', routes.findPrey);
 
 
 app.listen(3000);

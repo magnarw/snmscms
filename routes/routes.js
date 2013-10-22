@@ -2,15 +2,46 @@
 EpisodeProvider = require('../dao/EpisodeProvider').EpisodeProvider;
 var fs = require('fs');
 var path = require('path');
+var request = require('request');
 /*
 	
 */
 
-var episodeProvider= new EpisodeProvider('localhost', 27017);
+
+var options = {
+  host: 'api.xhanch.com',
+  path: '/islamic-get-prayer-time.php?lng=127&lat=90&yy=2017&mm=3&gmt=2&m=json',
+   method: 'GET',
+    headers: {
+        'Content-Type': 'text/html; charset=UTF-8'
+    }
+};
 
 
-exports.getPrayerTimesForDay = function (req, res) {
-  res.json({"preylist" : [{"name" : "fajr", "time" : "2009-04-12T00:55:50"},{"name" : "sunrise", "time" : "2009-04-12T06:00:00"},{"name" : "zuhr", "time" : "2009-04-12T12:00:00"},{"name" : "asr", "time" : "2009-04-12T16:00:00"}]});
+
+
+
+
+var episodeProvider= new PreyProvider('localhost', 27017);
+
+
+exports.findPrey = function (req, res) {
+  episodeProvider.findPrey(req.params.year,req.params.month,req.params.day, function (error, preys){
+    if(error || preys.length === 0) {
+        console.log("Could not find prey times for year " + req.params.year + " day " + req.params.month + " day " + req.params.day);
+        console.log("Will attempt to fetch from server");
+        request.get({url:'http://api.xhanch.com/islamic-get-prayer-time.php?lng=127&lat=90&yy=2017&mm=3&gmt=2&m=json',json:true}, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+          res.json(body["1"]);}
+        else { 
+          res.json({"error" : "could not find data"});
+        }
+      })
+    }
+    else { 
+      res.json(preys);
+    }
+  });
 }
 
 

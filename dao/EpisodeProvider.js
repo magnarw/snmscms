@@ -7,26 +7,42 @@ var ObjectID = require('mongodb').ObjectID;
 
 
 
-EpisodeProvider = function (host, port) {
-	this.db = new Db('snusogkaffe', new Server(host, port, {safe: false}, {auto_reconnect: true}, {}));
+PreyProvider = function (host, port) {
+	this.db = new Db('snms', new Server(host, port, {safe: false}, {auto_reconnect: true}, {}));
 	this.db.open(function(){});
 }
 
 
-EpisodeProvider.prototype.getCollection = function(callback) {
-  this.db.collection('episode_collection', function(error, episode_collection) {
+ PreyProvider.prototype.getCollection = function(callback) {
+  this.db.collection('snms', function(error, prey_collection) {
     if( error ) callback(error);
-    else callback(null, episode_collection);
+    else callback(null, prey_collection);
   });
 };
 
 
-//find all episodes
-EpisodeProvider.prototype.findAll = function(callback) {
-    this.getCollection(function(error, episode_collection) {
+
+PreyProvider.prototype.findAll = function(callback) {
+    this.getCollection(function(error, prey_collection) {
       if( error ) callback(error)
       else {
-        episode_collection.find().toArray(function(error, results) {
+        prey_collection.find().toArray(function(error, results) {
+          console.log("Dette er result: " + results)
+          if( error ) callback(error)
+          else callback(null, results)
+        });
+      }
+    });
+};
+
+PreyProvider.prototype.findPrey = function(year, month, day, callback) {
+    console.log(year);
+    console.log(month);
+    console.log(day);
+    this.getCollection(function(error, prey_collection) {
+      if( error ) callback(error)
+      else {
+          prey_collection.find({"year" : parseInt(year), "month" : parseInt(month) , "day" : parseInt(day)}).toArray(function(error, results) {
           console.log("Dette er result: " + results)
           if( error ) callback(error)
           else callback(null, results)
@@ -37,15 +53,15 @@ EpisodeProvider.prototype.findAll = function(callback) {
 
 
 
-EpisodeProvider.prototype.save = function(episode, callback) {
-    this.getCollection(function(error, episode_collection) {
+PreyProvider.prototype.save = function(prey, callback) {
+    this.getCollection(function(error, prey_collection) {
       if( error ) callback(error)
       else {
-        episode_collection.insert(episode, function() {
-          callback(null, episode);
+        prey_collection.insert(prey, function() {
+          callback(null, prey);
         });
       }
     });
 };
 
-exports.EpisodeProvider = EpisodeProvider;
+exports.PreyProvider = PreyProvider;

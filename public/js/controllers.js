@@ -12,7 +12,7 @@ function PreyAdminController($scope, $http, $timeout) {
 
   $scope.getPrayTimes = function () {
     $http({
-      url : 'http://localhost:3000/api/prayer',
+      url : 'api/prayer',
       method: 'GET',
       headers : 'Content-Type : application/json'
     }).success(function(data){
