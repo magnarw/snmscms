@@ -26,11 +26,11 @@ var episodeProvider= new PreyProvider('localhost', 27017);
 
 
 exports.findPrey = function (req, res) {
-  episodeProvider.findPrey(req.params.year,req.params.month,req.params.day, function (error, preys){
+  //episodeProvider.findPrey(req.params.year,req.params.month,req.params.day, function (error, preys){
 
     var formatedPreys = []; 
 
-    if(error || preys.length === 0) {
+  //  if(error || preys.length === 0) {
         console.log("Could not find prey times for year " + req.params.year + " day " + req.params.month + " day " + req.params.day);
         console.log("Will attempt to fetch from server");
         request.get({url:'http://api.xhanch.com/islamic-get-prayer-time.php?lng=127&lat=90&yy=2017&mm=3&gmt=2&m=json',json:true}, function (error, response, body) {
@@ -48,8 +48,8 @@ exports.findPrey = function (req, res) {
           res.json({"error" : "could not find data"});
         }
       })
-    }
-    else { 
+  //  }
+ /*   else { 
       for (var key in preys) { 
               if (preys.hasOwnProperty(key)) {
                  formatedPreys.push({name : key, time : "'" + req.params.year + "-" + req.params.month + "-" + req.params.day +"T" + preys[key] + ':00'});
@@ -59,6 +59,7 @@ exports.findPrey = function (req, res) {
       res.json({'preylist' : formatedPreys});
     }
   });
+*/
 }
 
 
