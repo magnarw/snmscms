@@ -12,11 +12,11 @@ function PreyAdminController($scope, $http, $timeout) {
 
   $scope.getPrayTimes = function () {
     $http({
-      url : 'api/prayer',
+      url : '/api/prayer/year/2013/month/10/day/27',
       method: 'GET',
       headers : 'Content-Type : application/json'
     }).success(function(data){
-          $scope.preyTimes = data; 
+          $scope.preyTimes = data.preylist; 
           $scope.initPrayTimesGrid(1,1,1);
     }); 
   }
@@ -24,10 +24,10 @@ function PreyAdminController($scope, $http, $timeout) {
 
   $scope.initPrayTimesGrid = function(day,month,year){
     $scope.selectedPrayTimes = []; 
-    var prayTimes =  $scope.preyTimes[day]; 
-    for(var key in prayTimes) {
-      $scope.selectedPrayTimes.push({'name' : key, 'time' : prayTimes[key]}); 
-    }
+    var prayTimes =  $scope.preyTimes; 
+    //for(var key in prayTimes) {
+     $scope.selectedPrayTimes = prayTimes; 
+    //}
 
   };
 
