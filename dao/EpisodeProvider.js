@@ -3,6 +3,7 @@ var Connection = require('mongodb').Connection;
 var Server = require('mongodb').Server;
 var BSON = require('mongodb').BSON;
 var ObjectID = require('mongodb').ObjectID;
+var BSON = require('mongodb').BSONPure;
 
 
 
@@ -57,9 +58,12 @@ PreyProvider.prototype.save = function(prey, callback) {
     this.getCollection(function(error, prey_collection) {
       if( error ) callback(error)
       else {
-        prey_collection.insert(prey, function() {
+        var objId = ObjectID.createFromHexString(prey._id);
+        prey_collection.remove({'_id' : objId});
+        prey_collection.save(prey, function() {
           callback(null, prey);
         });
+   
       }
     });
 };

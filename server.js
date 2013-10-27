@@ -12,8 +12,14 @@ app.configure(function(){
   app.use(express.methodOverride());
 
 
-app.get('/api/prayer/year/:year/month/:month/day/:day', routes.findPrey);
+app.get('/api/holidays', routes.findHolidays);
 
+app.get('/admin/api/holidays', routes.findHolidays);
+
+
+
+app.get('/api/prayer/year/:year/month/:month/day/:day', routes.findPrey);
+app.post('/admin/api/prayer', routes.savePrey);
 
 app.listen(3000);
 console.log('Listening on port 3000...');

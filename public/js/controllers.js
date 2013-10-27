@@ -8,50 +8,53 @@ function PreyAdminController($scope, $http, $timeout) {
   $scope.selectedPrayTimes = {}; 
   $scope.selectedDay = 1; 
   $scope.selectedMonth = 1;
-  $scope.selectedDay = 1;  
+  $scope.selectedYear = 1;  
 
   $scope.getPrayTimes = function () {
     $http({
-      url : '/api/prayer/year/2013/month/10/day/27',
+      url : '/api/prayer/year/'+ $scope.selectedYear +'/month/'+ $scope.selectedMonth+'/day/' + $scope.selectedDay,
       method: 'GET',
       headers : 'Content-Type : application/json'
     }).success(function(data){
-          $scope.preyTimes = data.preylist; 
-          $scope.initPrayTimesGrid(1,1,1);
+          $scope.preyTimes = data; 
     }); 
   }
  
 
-  $scope.initPrayTimesGrid = function(day,month,year){
-    $scope.selectedPrayTimes = []; 
-    var prayTimes =  $scope.preyTimes; 
-    //for(var key in prayTimes) {
-     $scope.selectedPrayTimes = prayTimes; 
-    //}
 
-  };
+  $scope.savePrey = function () {
+    $scope.preyTimes.year = $scope.selectedYear;
+    $scope.preyTimes.month = $scope.selectedMonth;
+    $scope.preyTimes.day = $scope.selectedDay;
 
-  $scope.addPrey = function () {
-    $scope.selectedPrayTimes.push({'name' : $scope.newPreyName, 'time' : $scope.newPreyTime}); 
-    $snewPreyName
+    $http({
+      url : '/admin/api/prayer',
+      method: 'POST',
+      data : $scope.preyTimes,
+      headers: {'Content-Type': 'application/json'}
+    }).success(function(data){
+         $scope.preyTimes = data;
+    }); 
   }
 
 
-  $scope.getPrayTimes(); 
+  $scope.addPrey = function () {
+    $scope.preyTimes.preylist.push({'name' : $scope.newPreyName, 'time' : $scope.newPreyTime}); 
+  }
 
-  $scope.gridOptions = { 
-        data: 'selectedPrayTimes',
-        enableCellSelection: true,
-        enableRowSelection: false,
-        enableCellEditOnFocus: true,
-        columnDefs: [{field: 'name', displayName: 'Navn på bønn', enableCellEdit: false}, 
-                     {field:'time', displayName:'Tidspunkt', enableCellEdit: true}]
-  };
+
+
 
   $scope.today = function() {
     $scope.dt = new Date();
+    $scope.selectedDay = $scope.dt.getDate();
+    $scope.selectedMonth = $scope.dt.getMonth() + 1 ;
+    $scope.selectedYear = $scope.dt.getFullYear();
   };
+  
   $scope.today();
+  $scope.getPrayTimes(); 
+
 
   $scope.open = function() {
     $timeout(function() {
@@ -60,7 +63,11 @@ function PreyAdminController($scope, $http, $timeout) {
   };
 
   $scope.$watch('dt', function() {
-      $scope.initPrayTimesGrid($scope.dt.getDay(),1,1);  
+     $scope.selectedDay = $scope.dt.getDate();
+     $scope.selectedMonth = $scope.dt.getMonth() + 1 ;
+      $scope.selectedYear = $scope.dt.getFullYear();
+      $scope.getPrayTimes();
+  
    });
 
 }
