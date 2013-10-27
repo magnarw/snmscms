@@ -14,7 +14,7 @@ app.configure(function(){
 
 app.get('/api/holidays', routes.findHolidays);
 
-app.get('/admin/api/holidays', routes.findHolidays);
+app.post('/admin/api/holidays', routes.saveHolidays);
 
 
 

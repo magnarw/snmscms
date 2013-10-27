@@ -5,5 +5,6 @@
 angular.module('myApp', ['myApp.filters','episodeService','ngResource','ui.bootstrap','ngGrid','myApp.directives']).
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.when("/preytimes", {templateUrl: "views/prey.html", controller: PreyAdminController});
+    $routeProvider.when("/holidays", {templateUrl: "views/holidays.html", controller: HolidaysAdminController});
     //$locationProvider.html5Mode(true);
   }]);
