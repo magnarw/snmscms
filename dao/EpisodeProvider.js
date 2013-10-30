@@ -58,8 +58,10 @@ PreyProvider.prototype.save = function(prey, callback) {
     this.getCollection(function(error, prey_collection) {
       if( error ) callback(error)
       else {
-        var objId = ObjectID.createFromHexString(prey._id);
-        prey_collection.remove({'_id' : objId});
+        if(prey._id) { 
+          var objId = ObjectID.createFromHexString(prey._id);
+          prey_collection.remove({'_id' : objId});
+         }
         prey_collection.save(prey, function() {
           callback(null, prey);
         });

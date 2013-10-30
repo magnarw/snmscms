@@ -135,3 +135,40 @@ function HolidaysAdminController($scope, $http, $timeout) {
 */
 
 }
+
+
+
+function NewsAdminController($scope, $http, $timeout) {
+
+  $scope.news = []; 
+
+  
+  $scope.addNews = function () {
+    var newNewsItem  = {title : $scope.newTitle, text : $scope.newText};
+    $scope.saveHoliday(newNewsItem);
+  };
+
+  $scope.getNews = function () {
+    $http({
+      url : '/api/news',
+      method: 'GET',
+      headers : 'Content-Type : application/json'
+    }).success(function(data){
+          $scope.news = data; 
+    }); 
+  }
+
+  $scope.saveHoliday = function (news) {
+    $http({
+      url : '/admin/api/news',
+      method: 'POST',
+      data : news,
+      headers: {'Content-Type': 'application/json'}
+    }).success(function(data){
+        $scope.holidays.push(data);
+    }); 
+  }
+
+  $scope.getNews();
+
+}

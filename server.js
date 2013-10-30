@@ -16,6 +16,9 @@ app.get('/api/holidays', routes.findHolidays);
 
 app.post('/admin/api/holidays', routes.saveHolidays);
 
+app.get('/api/news', routes.findNews);
+
+app.post('/admin/api/news', routes.saveNews);
 
 
 app.get('/api/prayer/year/:year/month/:month/day/:day', routes.findPrey);

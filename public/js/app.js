@@ -6,5 +6,6 @@ angular.module('myApp', ['myApp.filters','episodeService','ngResource','ui.boots
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.when("/preytimes", {templateUrl: "views/prey.html", controller: PreyAdminController});
     $routeProvider.when("/holidays", {templateUrl: "views/holidays.html", controller: HolidaysAdminController});
+    $routeProvider.when("/news", {templateUrl: "views/news.html", controller: NewsAdminController});
     //$locationProvider.html5Mode(true);
   }]);

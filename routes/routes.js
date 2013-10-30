@@ -1,6 +1,7 @@
 
 HolidaysProvider = require('../dao/HolidaysProvider').HolidaysProvider;
 EpisodeProvider = require('../dao/EpisodeProvider').EpisodeProvider;
+NewsProvider = require('../dao/NewsProvider').NewsProvider;
 var fs = require('fs');
 var path = require('path');
 var request = require('request');
@@ -25,6 +26,7 @@ var options = {
 
 var episodeProvider= new PreyProvider('localhost', 27017);
 var holidaysProvider= new HolidaysProvider('localhost', 27017);
+var newsProvider= new NewsProvider('localhost', 27017);
 
 
 exports.findPrey = function (req, res) {
@@ -35,9 +37,9 @@ exports.findPrey = function (req, res) {
     if(error || preys.length === 0) {
         console.log("Could not find prey times for year " + req.params.year + " day " + req.params.month + " day " + req.params.day);
         console.log("Will attempt to fetch from server");
-        request.get({url:'http://api.xhanch.com/islamic-get-prayer-time.php?lng=127&lat=90&yy=2017&mm=3&gmt=2&m=json',json:true}, function (error, response, body) {
+        request.get({url:'http://api.xhanch.com/islamic-get-prayer-time.php?lng=10&lat=59&yy='+req.params.year+'&mm='+req.params.month+'&gmt=1&m=json',json:true}, function (error, response, body) {
         if (!error && response.statusCode == 200) {
-          var preysForDay = body["1"];
+          var preysForDay = body[req.params.day];
           for (var key in preysForDay) { 
               if (preysForDay.hasOwnProperty(key)) {
                  formatedPreys.push({name : key, time : req.params.year + "-" + req.params.month + "-" + req.params.day +"T" + preysForDay[key]+':00'});
@@ -92,3 +94,23 @@ exports.savePrey = function (req, res) {
 exports.index = function(req, res) {
     res.sendfile(__dirname + "/public/index.html"); // updated to reflect dir structure
 };
+
+
+exports.findNews = function (req, res) {
+  newsProvider.findNews(function (error, news){
+    if(error || news.length === 0) {
+        res.json([]);
+    }
+    else { 
+      res.json(news);
+    }
+  });
+
+}
+
+exports.saveNews = function (req, res) {
+    var news = req.body;
+    newsProvider.saveNews(news,function(error, result){
+      res.json({'message' : 'This went ok'}); 
+  });
+}
