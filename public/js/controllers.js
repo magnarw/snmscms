@@ -137,7 +137,6 @@ function HolidaysAdminController($scope, $http, $timeout) {
 }
 
 
-
 function NewsAdminController($scope, $http, $timeout) {
 
   $scope.news = []; 
@@ -145,7 +144,7 @@ function NewsAdminController($scope, $http, $timeout) {
   
   $scope.addNews = function () {
     var newNewsItem  = {title : $scope.newTitle, text : $scope.newText};
-    $scope.saveHoliday(newNewsItem);
+    $scope.saveNews(newNewsItem);
   };
 
   $scope.getNews = function () {
@@ -158,14 +157,14 @@ function NewsAdminController($scope, $http, $timeout) {
     }); 
   }
 
-  $scope.saveHoliday = function (news) {
+  $scope.saveNews = function (news) {
     $http({
       url : '/admin/api/news',
       method: 'POST',
       data : news,
       headers: {'Content-Type': 'application/json'}
     }).success(function(data){
-        $scope.holidays.push(data);
+        $scope.news.push(news);
     }); 
   }
 
