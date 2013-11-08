@@ -140,10 +140,11 @@ function HolidaysAdminController($scope, $http, $timeout) {
 function NewsAdminController($scope, $http, $timeout) {
 
   $scope.news = []; 
-
+  $scope.newArticleImage; 
+  $scope.image; 
   
   $scope.addNews = function () {
-    var newNewsItem  = {title : $scope.newTitle, text : $scope.newText};
+    var newNewsItem  = {title : $scope.newTitle, text : $scope.newText, ingress : $scope.newIngress, newImageText : $scope.imageText, newAuthor : $scope.newAuthor};
     $scope.saveNews(newNewsItem);
   };
 
@@ -161,12 +162,65 @@ function NewsAdminController($scope, $http, $timeout) {
     $http({
       url : '/admin/api/news',
       method: 'POST',
-      data : news,
-      headers: {'Content-Type': 'application/json'}
+      transformRequest: function (data) {
+                var formData = new FormData();
+                //need to convert our json object to a string version of json otherwise
+                // the browser will do a 'toString()' on the object which will result 
+                // in the value '[Object object]' on the server.
+                formData.append("model", angular.toJson(data.model));
+                formData.append("file", data.file);
+                return formData;
+      },
+      data : {model : news, file : $scope.newArticleImage},
+      headers: {'Content-Type': false}
     }).success(function(data){
         $scope.news.push(news);
     }); 
   }
+
+
+
+  $scope.saveEpisode = function () {
+    $http({
+            url: 'http://localhost:3000/api/episode',
+            method: "POST",
+            transformRequest: function (data) {
+                var formData = new FormData();
+                //need to convert our json object to a string version of json otherwise
+                // the browser will do a 'toString()' on the object which will result 
+                // in the value '[Object object]' on the server.
+                formData.append("model", angular.toJson(data.model));
+                formData.append("file", data.file);
+                return formData;
+            },
+            data: { model: $scope.newEpisode, file: $scope.newEpisodeImage},
+            headers: { 'Content-Type': false }
+        }).success(function (data, status, headers, config) {
+                console.log('Det gikk bra')
+            }).error(function (data, status, headers, config) {
+               console.log('Det gikk dårlig')
+    });
+  }
+
+
+
+  $scope.$on("fileSelected", function (event, args) {
+       var reader = new FileReader();
+        $scope.$apply(function () {            
+            //add the file object to the scope's files collection
+            $scope.newArticleImage = args.file;
+      // Closure to capture the file information.
+          reader.onload = (function(theFile) {
+            return function(e) {
+              $scope.image = e.target.result;
+               $scope.$apply();
+            };
+          })();
+        });
+        reader.readAsDataURL( $scope.newArticleImage);
+
+  });
+
 
   $scope.getNews();
 

@@ -109,8 +109,24 @@ exports.findNews = function (req, res) {
 }
 
 exports.saveNews = function (req, res) {
-    var news = req.body;
+  appDir = path.dirname(require.main.filename);
+    var tempPath = req.files.file.path;
+     console.log("dfdfdfd:" +  appDir);
+    targetPath = path.resolve(appDir +'/public/uploads/' +req.files.file.name);
+     if (path.extname(req.files.file.name).toLowerCase() === '.jpg') {
+        fs.rename(tempPath, targetPath, function(err) {
+            console.log(err)
+            if (err) throw err;
+            console.log("Upload completed!");
+          });
+    }
+    var json = JSON.parse(req.body.model);
+    var news = {'title' : json.newTitle, 'text' : json.newText, 'ingress' : json.newIngress, 'newImageText' : json.imageText, 'newAuthor' : json.newAuthor, 'img' : req.files.file.name }
     newsProvider.saveNews(news,function(error, result){
       res.json({'message' : 'This went ok'}); 
   });
 }
+
+
+
+
