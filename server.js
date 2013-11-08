@@ -4,11 +4,13 @@ var express = require('express'),
  
 var app = express();
 
+
+
 app.configure(function(){
    app.use(express.static(path.join(__dirname, 'public'))); 
 });
 
-  app.use(express.bodyParser({uploadDir:'/bilder/'}));
+  app.use(express.bodyParser({uploadDir:'/home/ubuntu/temp'}));
   app.use(express.methodOverride());
 
 
