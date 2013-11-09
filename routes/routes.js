@@ -97,6 +97,17 @@ exports.index = function(req, res) {
 
 
 exports.findNews = function (req, res) {
+  if(req.params.id) {
+    newsProvider.findSingleNews(req.params.id,function (error, news){
+    if(error || news.length === 0) {
+        res.json("error");
+    }
+    else { 
+      res.json(news);
+    }
+  });
+  } else { 
+
   newsProvider.findNews(function (error, news){
     if(error || news.length === 0) {
         res.json([]);
@@ -105,7 +116,7 @@ exports.findNews = function (req, res) {
       res.json(news);
     }
   });
-
+ }
 }
 
 exports.saveNews = function (req, res) {
@@ -121,12 +132,21 @@ exports.saveNews = function (req, res) {
           });
     }
     var json = JSON.parse(req.body.model);
-    var news = {'title' : json.newTitle, 'text' : json.newText, 'ingress' : json.newIngress, 'newImageText' : json.imageText, 'newAuthor' : json.newAuthor, 'img' : req.files.file.name }
+    var news = {'title' : json.title, 'text' : json.text, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : 'http://http://46.137.184.176:3000/uploads/' + req.files.file.name }
     newsProvider.saveNews(news,function(error, result){
       res.json({'message' : 'This went ok'}); 
   });
 }
 
+
+
+exports.removeNews = function (req, res) {
+    var json = JSON.parse(req.body.model);
+    var news = req.body;
+    newsProvider.removeNews(news,function(error, result){
+      res.json({'message' : 'This went ok'}); 
+  });
+}
 
 
 

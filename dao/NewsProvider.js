@@ -39,6 +39,34 @@ NewsProvider.prototype.findNews = function(callback) {
     });
 };
 
+
+NewsProvider.prototype.findSingleNews = function(id, callback) {
+    this.getCollection(function(error, news_collection) {
+      if( error ) callback(error)
+      else {
+          var objects = news_collection.find({_id : id});
+          console.log(objects);
+          objects.toArray(function(error, results) {
+         // console.log("Dette er result: " + results)
+          if( error ) callback(error)
+          else callback(null, results)
+        });
+      }
+    });
+};
+
+
+/*
+NewsProvider.prototype.removeNews = function(news, callback) {
+    this.getCollection(function(error, news_collection) {
+      if( error ) callback(error)
+      var objId = ObjectID.createFromHexString(news._id);
+      news_collection.remove({'_id' : objId}, function() {
+            callback(null, news);
+      });
+};
+*/
+
 NewsProvider.prototype.saveNews = function(news, callback) {
     this.getCollection(function(error, news_collection) {
       if( error ) callback(error)
