@@ -132,7 +132,7 @@ exports.saveNews = function (req, res) {
           });
     }
     var json = JSON.parse(req.body.model);
-    var news = {'title' : json.title, 'text' : json.text, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : 'http://http://46.137.184.176:3000/uploads/' + req.files.file.name }
+    var news = {'title' : json.title, 'text' : json.text, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : 'http://46.137.184.176:3000/uploads/' + req.files.file.name }
     newsProvider.saveNews(news,function(error, result){
       res.json({'message' : 'This went ok'}); 
   });
