@@ -124,7 +124,7 @@ exports.saveNews = function (req, res) {
     var tempPath = req.files.file.path;
      console.log("dfdfdfd:" +  appDir);
     targetPath = path.resolve(appDir +'/public/uploads/' +req.files.file.name);
-     if (path.extname(req.files.file.name).toLowerCase() === '.jpg') {
+     if (path.extname(req.files.file.name).toLowerCase() === '.jpg' || path.extname(req.files.file.name).toLowerCase() === '.gif') {
         fs.rename(tempPath, targetPath, function(err) {
             console.log(err)
             if (err) throw err;
