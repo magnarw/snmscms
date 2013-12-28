@@ -24,9 +24,9 @@ var options = {
 
 
 
-var episodeProvider= new PreyProvider('localhost', 27017);
-var holidaysProvider= new HolidaysProvider('localhost', 27017);
-var newsProvider= new NewsProvider('localhost', 27017);
+var episodeProvider= new PreyProvider('46.137.184.176', 27017);
+var holidaysProvider= new HolidaysProvider('46.137.184.176', 27017);
+var newsProvider= new NewsProvider('46.137.184.176', 27017);
 
 
 exports.findPrey = function (req, res) {

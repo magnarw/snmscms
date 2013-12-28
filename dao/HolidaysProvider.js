@@ -15,7 +15,7 @@ HolidaysProvider = function (host, port) {
 
 
  HolidaysProvider.prototype.getCollection = function(callback) {
-  this.db.collection('holidays', function(error, holidays_collection) {
+  this.db.collection('jumma', function(error, holidays_collection) {
     if( error ) callback(error);
     else callback(null, holidays_collection);
   });

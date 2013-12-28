@@ -84,24 +84,23 @@ function HolidaysAdminController($scope, $http, $timeout) {
   */
   
   $scope.addHoliday = function () {
-    var holiday = {name : $scope.newHolidayName, from : $scope.dtFrom, to : $scope.dtTo, appFrom : $scope.dtAppFrom, appTo : $scope.dtAppTo};
+    var holiday = {fromMonth : $scope.fromMonth, toMonth : $scope.toMonth, fromDay : $scope.fromDay, toDay : $scope.toDay, hours : $scope.hours, minuttes : $scope.min};
     $scope.holidays.push(holiday);
   };
 
-  $scope.today = function() {
-    $scope.dtFrom = new Date();
-    $scope.dtTo = new Date();
-    $scope.dtAppTo = new Date();
-    $scope.dtAppFrom = new Date();
-  };
-  
-  $scope.today();
 
-  $scope.open = function() {
-    $timeout(function() {
-      $scope.opened = true;
-    });
-  };
+  /*
+
+  int fromMonth;
+  int toMonth;
+  int fromDay;
+  int toDay;
+  DateTime updated;
+  int hours; 
+  int minuttes; 
+  */
+
+  
 
   $scope.getHolidays = function () {
     $http({
@@ -110,6 +109,8 @@ function HolidaysAdminController($scope, $http, $timeout) {
       headers : 'Content-Type : application/json'
     }).success(function(data){
           $scope.holidays = data; 
+    }).error(function(data){
+       alert("Kunne ikke hente fredagsbønner fra serveren. Prøv igjen senere");
     }); 
   }
 
@@ -121,6 +122,8 @@ function HolidaysAdminController($scope, $http, $timeout) {
       headers: {'Content-Type': 'application/json'}
     }).success(function(data){
          //$scope.preyTimes = data;
+    }).error(function(data){
+       alert("Kunne ikke lagre fredagsbønner til serveren. Prøv igjen senere");
     }); 
   }
 

@@ -2,45 +2,51 @@
 
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<h3 class="panel-title">Administrer helligdager</h3>
+			<h3 class="panel-title">Administrer fredagsbønn</h3>
 		</div>
 		<div class="panel-body">
 			<div>
 				<div class="well well-lg">
-					<h4>Legg til ny helligdag</h4>
+					<h4>Legg til ny fredagsbønnregel</h4>
 					<form class="form-horizontal" role="form">
 						<div class="form-group">
-							<label for="inputNavn" class="col-lg-2 control-label">Navn på helligdag</label>
-							<div class="col-lg-10">
-								<input type="text" ng-model="newHolidayName" class="form-control" id="inputNavn" placeholder="navn">
+							<label for="inputNavn" class="col-lg-4 control-label">Fra dag i måned(1-31)</label>
+							<div class="col-lg-1">
+								<input type="text" ng-model="fromDay" class="form-control" id="inputNavn" >
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="inputFrom"  class="col-lg-2 control-label">Fra</label>
-							<div class="col-lg-10">
-								<input type="text" id="inputFrom" datepicker-popup="dd-MMMM-yyyy" ng-model="dtFrom" is-open="openfrom" min="minDate" max="'2015-06-22'" ng-required="true" />
+							<label for="inputFrom"  class="col-lg-4 control-label">Fra måned(1-12)</label>
+							<div class="col-lg-1">
+								<input type="text" ng-model="fromMonth" class="form-control" id="fromMonth" ng-required="true" />
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="inputTo"  class="col-lg-2 control-label">Til</label>
-							<div class="col-lg-10">
-								<input type="text" id="inputTo" datepicker-popup="dd-MMMM-yyyy" ng-model="dtTo" is-open="opento" min="minDate" max="'2015-06-22'" ng-required="true" />
+							<label for="inputTo"  class="col-lg-4 control-label">Til dag i måned(1-31)</label>
+							<div class="col-lg-1">
+								<input type="text" class="form-control" ng-model="toDay" id="toDay" ng-required="true" />
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="inputAppFrom"  class="col-lg-2 control-label">Vises i app fra</label>
-							<div class="col-lg-10">
-								<input type="text" id="inputAppFrom" datepicker-popup="dd-MMMM-yyyy" ng-model="dtAppFrom" is-open="openappfrom" min="minDate" max="'2015-06-22'"ng-required="true" />
+							<label for="inputAppFrom"  class="col-lg-4 control-label">Til måned(1-12)</label>
+							<div class="col-lg-1">
+								<input type="text" class="form-control"  ng-model="toMonth" id="toMonth" ng-required="true" />
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="inputAppTo"  class="col-lg-2 control-label">Vises i app til</label>
-							<div class="col-lg-10">
-								<input type="text" id="inputAppTo" datepicker-popup="dd-MMMM-yyyy" ng-model="dtAppTo" is-open="openappto" min="minDate" max="'2015-06-22'"ng-required="true" />
+							<label for="inputAppTo"  class="col-lg-4 control-label">Bønnetid timer(0-24)</label>
+							<div class="col-lg-1">
+								<input type="text" class="form-control"  ng-model="hours" id="hour" ng-required="true" />
 							</div>
 						</div>
 						<div class="form-group">
-							<div class="col-lg-offset-2 col-lg-10">
+							<label for="inputAppTo"  class="col-lg-4 control-label">Bønnetid minutter(0-60)</label>
+							<div class="col-lg-1">
+								<input type="text" id="min" class="form-control"  ng-model="min" ng-required="true" />
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-lg-offset-4 col-lg-10">
 								<button type="submit" class="btn btn-default" ng-click="addHoliday()">Legg til</button>
 							</div>
 						</div>
@@ -50,25 +56,25 @@
 			<div>
 				<table>
 					<tr>
-						<th>Navn på hellidag</th>
-						<th>Fra</th>
-						<th>Til</th>
-						<th>Synlig i app fra</th>
-						<th>Synlig i app til</th>
+						<th>Fra dag</th>
+						<th>Fra måned</th>
+						<th>Til dag</th>
+						<th>Til måned</th>
+						<th>Bønntid timer</th>
+						<th>Bønntid minutter</th>
 						<th>Slett</th>
 					</tr>
 					<tr ng-repeat="holiday in holidays">
-						<td><input type="text" ng-model="holiday.name"/></td>
-						<td><input type="text" ng-model="holiday.from"/></td>
-						<td><input type="text" ng-model="holiday.to"/></td>
-						<td><input type="text" ng-model="holiday.appFrom"/></td>
-						<td><input type="text" ng-model="holiday.appTo"/></td>
+						<td><input type="text" ng-model="holiday.fromDay"/></td>
+						<td><input type="text" ng-model="holiday.fromMonth"/></td>
+						<td><input type="text" ng-model="holiday.toDay"/></td>
+						<td><input type="text" ng-model="holiday.toMonth"/></td>
+						<td><input type="text" ng-model="holiday.hours"/></td>
+						<td><input type="text" ng-model="holiday.minuttes"/></td>
 						<td><a href="#">Slett</a></td>
 					</tr>
 				</table>
-
 				<button type="button" ng-click="saveHolidays()" class="btn btn-success btn-lg">Lagre endringer</button>
-				<button type="button" class="btn btn-success btn-lg">Push endringer til mobilklienter</button>
 			</div>
 			
 
