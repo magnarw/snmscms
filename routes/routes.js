@@ -107,7 +107,8 @@ exports.findNews = function (req, res) {
     }
   });
   } else { 
-
+  var pageSize = req.query.pageSize;
+  var pageNumber = req.query.pageNumber;
   newsProvider.findNews(function (error, news){
     if(error || news.length === 0) {
         res.json([]);
@@ -115,14 +116,13 @@ exports.findNews = function (req, res) {
     else { 
       res.json(news);
     }
-  });
+  },pageSize,pageNumber);
  }
 }
 
 exports.saveNews = function (req, res) {
   appDir = path.dirname(require.main.filename);
     var tempPath = req.files.file.path;
-     console.log("dfdfdfd:" +  appDir);
     targetPath = path.resolve(appDir +'/public/uploads/' +req.files.file.name);
      if (path.extname(req.files.file.name).toLowerCase() === '.jpg' || path.extname(req.files.file.name).toLowerCase() === '.gif') {
         fs.rename(tempPath, targetPath, function(err) {
@@ -132,7 +132,7 @@ exports.saveNews = function (req, res) {
           });
     }
     var json = JSON.parse(req.body.model);
-    var news = {'title' : json.title, 'text' : json.text, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : 'http://46.137.184.176:3000/uploads/' + req.files.file.name }
+    var news = {'title' : json.title, 'text' : json.text, 'createdDate' : new Date(),  'pri' : json.pri, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : 'http://46.137.184.176:3000/uploads/' + req.files.file.name }
     newsProvider.saveNews(news,function(error, result){
       res.json({'message' : 'This went ok'}); 
   });

@@ -23,13 +23,20 @@ NewsProvider = function (host, port) {
 
 
 
-NewsProvider.prototype.findNews = function(callback) {
+NewsProvider.prototype.findNews = function(callback, pageSize,pageNumber) {
     this.getCollection(function(error, news_collection) {
       if( error ) callback(error)
       else {
-          var objects = news_collection.find();
-          console.log(objects);
-        
+
+          var skip = pageSize*pageNumber;
+          console.log("skip:" + skip +" limit:" + pageSize);
+          var options = {
+              "limit": pageSize,
+              "skip": skip,
+              "sort": [['pri','desc'], ['createdDate','-1']]
+          };
+          var objects = news_collection.find({},options);
+          console.log("Henter nyheter");
           objects.toArray(function(error, results) {
          // console.log("Dette er result: " + results)
           if( error ) callback(error)
@@ -67,21 +74,58 @@ NewsProvider.prototype.removeNews = function(news, callback) {
 };
 */
 
-NewsProvider.prototype.saveNews = function(news, callback) {
+
+
+//1) Sjekk om nyheten har pri -> i så fall 
+
+NewsProvider.prototype.saveNews = function (news, callback) {
     this.getCollection(function(error, news_collection) {
       if( error ) callback(error)
       else {
+
+          if(news.pri) {
+            var objects = news_collection.find({pri : news.pri});
+            objects.toArray(function(error, results) {
+             // console.log("Dette er result: " + results)
+              if( error ) callback(error)
+              else {
+
+                    if(news._id) { 
+                        var objId = ObjectID.createFromHexString(news._id);
+                        var oldNews = news_collection.find({'pri' : news.pri});
+                        news_collection.remove({'_id' : objId});
+                        news.updatedDate = new Date();
+                        news.createdDate = oldNews.createdDate;
+                    }
+                    if(!results || results.length === 0){
+                      results = []; 
+                    }
+                    console.log("kommer hit");
+                    results.push(news); 
+                    for(var x = 0;x<results.length;x++) {
+                       news_collection.save(results[x], function() {
+                        if(x === results.length-1)
+                           callback(null, news);
+                       });
+                    }
+              }
+            });
+          } else {
           if(news._id) { 
             var objId = ObjectID.createFromHexString(news._id);
+            var oldNews = news_collection.find({'pri' : news.pri});
             news_collection.remove({'_id' : objId});
+            news.updatedDate = new Date();
+            news.createdDate = oldNews.createdDate;
           }
-          news.createdDate = new Date();
           news_collection.save(news, function() {
             callback(null, news);
           });
         }
+      }
     });
 };
+
 
 
 

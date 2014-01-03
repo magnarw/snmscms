@@ -146,8 +146,17 @@ function NewsAdminController($scope, $http, $timeout) {
   $scope.newArticleImage; 
   $scope.image; 
   
+  $scope.priority = [
+    {name:'Forsiden 1', value: 2},
+    {name:'Forsiden 2', value : 1}
+  ];
+
+
   $scope.addNews = function () {
-    var newNewsItem  = {title : $scope.newTitle, text : $scope.newText, ingress : $scope.newIngress, imageText : $scope.newImageText, author : $scope.newAuthor};
+    if($scope.pri)
+       var newNewsItem  = {title : $scope.newTitle, text : $scope.newText, ingress : $scope.newIngress, imageText : $scope.newImageText, author : $scope.newAuthor, pri : $scope.pri.value };
+    else 
+       var newNewsItem  = {title : $scope.newTitle, text : $scope.newText, ingress : $scope.newIngress, imageText : $scope.newImageText, author : $scope.newAuthor};
     $scope.saveNews(newNewsItem);
   };
 

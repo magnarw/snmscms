@@ -44,8 +44,16 @@
 							</div>
 						</div>
 						<div class="form-group">
+							<label for="pri"  class="col-lg-2 control-label">Velg prioritet på forisden</label>
+							<div class="col-lg-10">
+								<select ng-model="pri" id="pri" ng-options="c.name for c in priority">
+									<option value="">-- Prioritet --</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
 							<div class="col-lg-offset-2 col-lg-10">
-								<button type="submit" class="btn btn-default" ng-click="addNews()">Legg til</button>
+								<button type="submit" class="btn btn-default" ng-click="addNews()">Lagre nyhet til server</button>
 							</div>
 						</div>
 					</form>
@@ -74,9 +82,6 @@
 						</td>
 					</tr>
 				</table>
-
-				<button type="button" ng-click="savePrey()" class="btn btn-success btn-lg">Lagre endringer</button>
-				<button type="button" ng-click="open()" class="btn btn-success btn-lg">Push endringer til mobilklienter</button>
 			</div>
 
 		</div>
