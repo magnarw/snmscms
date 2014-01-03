@@ -89,7 +89,6 @@ NewsProvider.prototype.saveNews = function (news, callback) {
              // console.log("Dette er result: " + results)
               if( error ) callback(error)
               else {
-
                     if(news._id) { 
                         var objId = ObjectID.createFromHexString(news._id);
                         var oldNews = news_collection.find({'pri' : news.pri});
@@ -103,7 +102,7 @@ NewsProvider.prototype.saveNews = function (news, callback) {
                     console.log("kommer hit");
                     results.push(news); 
                     for(var x = 0;x<results.length;x++) {
-                       news_collection.save(results[x], function() {
+                       news_collection.update(results[x], function() {
                         if(x === results.length-1)
                            callback(null, news);
                        });

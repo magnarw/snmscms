@@ -121,10 +121,14 @@ exports.findNews = function (req, res) {
 }
 
 exports.saveNews = function (req, res) {
+
+  var uploadnewImage = req.query.imageHasChanged;
+
+  if(uploadnewImage === "true") { 
   appDir = path.dirname(require.main.filename);
     var tempPath = req.files.file.path;
     targetPath = path.resolve(appDir +'/public/uploads/' +req.files.file.name);
-     if (path.extname(req.files.file.name).toLowerCase() === '.jpg' || path.extname(req.files.file.name).toLowerCase() === '.gif') {
+     if (path.extname(req.files.file.name).toLowerCase() === '.jpg' || path.extname(req.files.file.name).toLowerCase() === '.gif'  || path.extname(req.files.file.name).toLowerCase() === '.png') {
         fs.rename(tempPath, targetPath, function(err) {
             console.log(err)
             if (err) throw err;
@@ -136,6 +140,13 @@ exports.saveNews = function (req, res) {
     newsProvider.saveNews(news,function(error, result){
       res.json({'message' : 'This went ok'}); 
   });
+  } else {
+    var json = JSON.parse(req.body.model);
+    var news = {'title' : json.title, 'text' : json.text, 'createdDate' : new Date(),  'pri' : json.pri, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : json.imgUrl};
+    newsProvider.saveNews(news,function(error, result){
+      res.json({'message' : 'This went ok'}); 
+    });
+  }
 }
 
 

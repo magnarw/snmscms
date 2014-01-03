@@ -151,7 +151,7 @@ function NewsAdminController($scope, $http, $timeout) {
     {name:'Forsiden 2', value : 1}
   ];
 
-
+  /*
   $scope.addNews = function () {
     if($scope.pri)
        var newNewsItem  = {title : $scope.newTitle, text : $scope.newText, ingress : $scope.newIngress, imageText : $scope.newImageText, author : $scope.newAuthor, pri : $scope.pri.value };
@@ -159,6 +159,7 @@ function NewsAdminController($scope, $http, $timeout) {
        var newNewsItem  = {title : $scope.newTitle, text : $scope.newText, ingress : $scope.newIngress, imageText : $scope.newImageText, author : $scope.newAuthor};
     $scope.saveNews(newNewsItem);
   };
+  */
 
   $scope.getNews = function () {
     $http({
@@ -170,15 +171,21 @@ function NewsAdminController($scope, $http, $timeout) {
     }); 
   }
 
+  //TODO : Post with a query paramter if the image has not been changed. 
   $scope.saveNews = function (news) {
+    if($scope.pri) 
+      news.pri = $scope.pri.value; 
+
+    var urlToPost = '/admin/api/news?imageHasChanged=false';
+    if($scope.imageHasChanged){
+      urlToPost =  '/admin/api/news?imageHasChanged=true'
+    }
+
     $http({
-      url : '/admin/api/news',
+      url : urlToPost,
       method: 'POST',
       transformRequest: function (data) {
                 var formData = new FormData();
-                //need to convert our json object to a string version of json otherwise
-                // the browser will do a 'toString()' on the object which will result 
-                // in the value '[Object object]' on the server.
                 formData.append("model", angular.toJson(data.model));
                 formData.append("file", data.file);
                 return formData;
@@ -186,10 +193,41 @@ function NewsAdminController($scope, $http, $timeout) {
       data : {model : news, file : $scope.newArticleImage},
       headers: {'Content-Type': false}
     }).success(function(data){
-        $scope.news.push(news);
+        //TODO : Loop through all news to see if it's allready exsists in the list, if not add it. 
+        var shouldAdd = true; 
+        for(var i; i <$scope.news.length;i++) {
+          if($scope.selectedNews._id === news._id) {
+            shouldAdd = false; 
+          }
+        }
+        if(shouldAdd)
+         $scope.news.push(news);
+        alert("Nyhet har blitt lagret på servern");
+    }).error(function (error) {
+       alert("Noe gikk galt ved lagring av nyhet. Kontakt Magnar på 46793283"); 
     }); 
-  }
+  };
 
+
+  $scope.editNews = function (news) {
+    $scope.imageHasChanged = false;
+    $scope.image = news.imgUrl;
+    $scope.selectedNews = news; 
+    $scope.pri = null;
+    if(news.pri) {
+
+      for(var i = 0; i<$scope.priority.length;i++) {
+        if($scope.priority[i].value===news.pri){
+          console.log("Kommer inn her");
+          $scope.pri = $scope.priority[i];
+        }
+      }
+    }
+
+  };
+
+
+  //1) Du trenger ikke å laste opp bildet på nytt. Bare sjekk at det ikke har blitt endret. 
   $scope.$on("fileSelected", function (event, args) {
        var reader = new FileReader();
         $scope.$apply(function () {            
@@ -199,6 +237,7 @@ function NewsAdminController($scope, $http, $timeout) {
           reader.onload = (function(theFile) {
             return function(e) {
               $scope.image = e.target.result;
+               $scope.imageHasChanged = true;
                $scope.$apply();
             };
           })();
