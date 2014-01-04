@@ -36,8 +36,9 @@ NewsProvider.prototype.findNews = function(callback, pageSize,pageNumber,filter)
               "sort": [['pri','desc'], ['createdDate','-1']]
           };
           console.log("Henter med filter : " + filter);
-          if(filter === "1" || filter === "2" || filter === "3" )
-            var objects = news_collection.find({cat : filter},options);
+          if(filter === "1" || filter === "2" || filter === "3" ) { 
+            console.log("Filter dfdf");
+            var objects = news_collection.find({cat :parseInt(filter,10)},options);}
           else 
             var objects = news_collection.find({},options);
           console.log("Henter nyheter");
@@ -130,7 +131,7 @@ NewsProvider.prototype.saveNews = function(news, callback) {
           console.log("title:" + objId);
         news.updatedDate = new Date();
         news._id = objId;
-         news_collection.update({ _id :  news_collection.db.bson_serializer.ObjectID.createFromHexString(news._id) }, news, function (error,updated) {
+         news_collection.update({ _id :  objId }, news, function (error,updated) {
       
         callback(null, news);
       });

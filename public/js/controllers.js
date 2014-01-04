@@ -127,6 +127,21 @@ function HolidaysAdminController($scope, $http, $timeout) {
     }); 
   }
 
+
+  $scope.removeJumma = function (jumma) {
+    $http({
+      url : '/admin/api/jumma/remove',
+      method: 'POST',
+      data : jumma,
+      headers: {'Content-Type': 'application/json'}
+    }).success(function(data){
+        $scope.getHolidays();
+    }).error(function(data){
+       alert("Kunne ikke slette fredagsbønn fra serveren. Prøv igjen senere");
+    }); 
+  }
+
+
   $scope.getHolidays();
 
   /*

@@ -18,6 +18,8 @@ app.get('/api/holidays', routes.findHolidays);
 
 app.post('/admin/api/holidays', routes.saveHolidays);
 
+app.post('/admin/api/jumma/remove', routes.removeJumma);
+
 app.get('/api/news', routes.findNews);
 
 app.post('/admin/api/news', routes.saveNews);

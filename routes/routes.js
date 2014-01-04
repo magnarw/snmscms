@@ -141,6 +141,7 @@ exports.saveNews = function (req, res) {
     if(json._id) {
       news._id = json._id; 
     }
+    news.cat =  json.cat;
     newsProvider.saveNews(news,function(error, result){
       res.json({'message' : 'This went ok'}); 
   });
@@ -150,6 +151,7 @@ exports.saveNews = function (req, res) {
     if(json._id) {
       news._id = json._id; 
     }
+    news.cat =  json.cat;
     newsProvider.saveNews(news,function(error, result){
       res.json({'message' : 'This went ok'}); 
     });
@@ -164,6 +166,15 @@ exports.removeNews = function (req, res) {
       res.json({'message' : 'This went ok'}); 
   });
 }
+
+
+exports.removeJumma = function (req, res) {
+    var news = req.body;
+    holidaysProvider.removeJumma(news,function(error, result){
+      res.json({'message' : 'This went ok'}); 
+  });
+}
+
 
 
 

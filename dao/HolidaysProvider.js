@@ -40,6 +40,20 @@ HolidaysProvider.prototype.findHolidays = function(callback) {
 };
 
 
+HolidaysProvider.prototype.removeJumma = function(news, callback) {
+    this.getCollection(function(error, holidays_collection) {
+      if( error ) callback(error)
+      var objId = ObjectID.createFromHexString(news._id);
+      holidays_collection.remove({'_id' : objId}, function(error) {
+            console.log("Dette er error "  + error);
+            callback(null, news);
+      });
+});
+
+}
+
+
+
 HolidaysProvider.prototype.saveHolidays = function(holidays, callback) {
     this.getCollection(function(error, holidays_collection) {
       if( error ) callback(error)

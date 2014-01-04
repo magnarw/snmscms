@@ -71,7 +71,7 @@
 						<td><input type="text" ng-model="holiday.toMonth"/></td>
 						<td><input type="text" ng-model="holiday.hours"/></td>
 						<td><input type="text" ng-model="holiday.minuttes"/></td>
-						<td><a href="#">Slett</a></td>
+						<td><button type="button" ng-click="removeJumma(holiday)" class="btn btn-success btn-lg">Slett</button></td>
 					</tr>
 				</table>
 				<button type="button" ng-click="saveHolidays()" class="btn btn-success btn-lg">Lagre endringer</button>
