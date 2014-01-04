@@ -151,6 +151,12 @@ function NewsAdminController($scope, $http, $timeout) {
     {name:'Forsiden 2', value : 1}
   ];
 
+  $scope.category = [
+    {name:'Nyhet', value: 1},
+    {name:'Byggeprosjektet', value : 2},
+    {name:'Event', value : 3},
+  ];
+
   /*
   $scope.addNews = function () {
     if($scope.pri)
@@ -175,6 +181,8 @@ function NewsAdminController($scope, $http, $timeout) {
   $scope.saveNews = function (news) {
     if($scope.pri) 
       news.pri = $scope.pri.value; 
+    if($scope.cat)
+      news.cat = $scope.cat.value; 
 
     var urlToPost = '/admin/api/news?imageHasChanged=false';
     if($scope.imageHasChanged){
@@ -195,12 +203,14 @@ function NewsAdminController($scope, $http, $timeout) {
     }).success(function(data){
         //TODO : Loop through all news to see if it's allready exsists in the list, if not add it. 
         var shouldAdd = true; 
-        for(var i; i <$scope.news.length;i++) {
+        for(var i=0; i<$scope.news.length;i++) {
+          console.log("jobber i for loopn")
           if($scope.selectedNews._id === news._id) {
+
             shouldAdd = false; 
           }
         }
-        if(shouldAdd)
+        if(shouldAdd === true)
          $scope.news.push(news);
         alert("Nyhet har blitt lagret på servern");
     }).error(function (error) {
@@ -208,21 +218,35 @@ function NewsAdminController($scope, $http, $timeout) {
     }); 
   };
 
+  $scope.cancelEdit = function () {
+    $scope.isInEditMode = false; 
+    $scope.selectedNews = {};
+    $scope.cat = $scope.category[0];
+  };
 
   $scope.editNews = function (news) {
+    $scope.isInEditMode = true; 
     $scope.imageHasChanged = false;
     $scope.image = news.imgUrl;
     $scope.selectedNews = news; 
     $scope.pri = null;
+    $scope.cat = null;
     if(news.pri) {
-
       for(var i = 0; i<$scope.priority.length;i++) {
         if($scope.priority[i].value===news.pri){
-          console.log("Kommer inn her");
           $scope.pri = $scope.priority[i];
         }
       }
     }
+   if(news.cat) {
+      for(var i = 0; i<$scope.category.length;i++) {
+        if($scope.category[i].value===news.cat){
+          console.log("Kommer inn her");
+          $scope.cat = $scope.cat[i];
+        }
+      }
+    } 
+
 
   };
 
@@ -246,7 +270,19 @@ function NewsAdminController($scope, $http, $timeout) {
 
   });
 
+  $scope.isNyhet = function() {
+    return $scope.cat && $scope.cat.value === 1; 
+  };
+
+  $scope.isBygg = function() {
+    return $scope.cat && $scope.cat.value === 2; 
+  };
+
+  $scope.isEvent = function() {
+    return $scope.cat && $scope.cat.value === 3; 
+  };
 
   $scope.getNews();
+  $scope.cancelEdit();
 
 }

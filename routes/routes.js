@@ -137,12 +137,18 @@ exports.saveNews = function (req, res) {
     }
     var json = JSON.parse(req.body.model);
     var news = {'title' : json.title, 'text' : json.text, 'createdDate' : new Date(),  'pri' : json.pri, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : 'http://46.137.184.176:3000/uploads/' + req.files.file.name }
+    if(json._id) {
+      news._id = json._id; 
+    }
     newsProvider.saveNews(news,function(error, result){
       res.json({'message' : 'This went ok'}); 
   });
   } else {
     var json = JSON.parse(req.body.model);
     var news = {'title' : json.title, 'text' : json.text, 'createdDate' : new Date(),  'pri' : json.pri, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : json.imgUrl};
+    if(json._id) {
+      news._id = json._id; 
+    }
     newsProvider.saveNews(news,function(error, result){
       res.json({'message' : 'This went ok'}); 
     });

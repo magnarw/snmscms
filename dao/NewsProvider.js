@@ -75,9 +75,161 @@ NewsProvider.prototype.removeNews = function(news, callback) {
 */
 
 
+NewsProvider.prototype.saveNews = function(news, callback) {
+    this.getCollection(function(error, news_collection) {
+      if( error ) callback(error)
+      if (news.pri === 1 || news.pri === 2) {
+      //if news allready exsists we have to remove this so I don't mess of our later update of news with similar pri 
+      if (news._id) {
+        var objId = ObjectID.createFromHexString(news._id);
+        news_collection.remove({
+          '_id': objId
+        }, function (error, result) {
+          if (error) {
+            console.log(error);
+            callback(error);
+          } else {
+            console.log("Har fjernet eksiterende nyhet. Vil prøve å oppdatere nyheter med samme pri");
+            news_collection.update({pri : news.pri}, {$set : {pri : null}}, {w:1, multi : true}, function(error, num) {
+            if(error){
+              console.log("Oppdaterting av nyheter med samme pri gikk til helevete. Vil avbryte");
+              callback(error); 
+            }
+            console.log("Har oppdatert " + num + " med samme pri."); 
+            console.log("Vil nå lagre nyhet."); 
+            news_collection.save(news, function () {
+                    callback(null, news);
+                  });
+            });
+          }
+        });
+      } else {
+            news_collection.update({pri : news.pri}, {$set : {pri : null}}, {w:1, multi : true}, function(error, num) {
+            if(error){
+              console.log("Oppdaterting av nyheter med samme pri gikk til helevete. Vil avbryte");
+              callback(error); 
+            }
+            console.log("Har oppdatert " + num + " med samme pri."); 
+            console.log("Vil nå lagre nyhet."); 
+            news_collection.save(news, function () {
+                    callback(null, news);
+                  });
+            });
+      }
+  } else {
+      if (news._id) {
+        console.log("Nyhet har ingen pri, men må fjerne eksiternede nyhet med samme id");
+        var objId = ObjectID.createFromHexString(news._id);
+        var oldNews = news_collection.find({
+          'pri': news.pri
+        });
+        news_collection.remove({
+          '_id': objId
+        });
+        news.updatedDate = new Date();
+        news.createdDate = oldNews.createdDate;
+      }
+      console.log("Lagrer ny nyhet uten pri");
+      news_collection.save(news, function () {
+        callback(null, news);
+      });
+  }
+  });
+}
+
+
+
+/*
+//find news with same id if 
+
+NewsProvider.prototype.saveNews = function (news, callback) {
+  this.getCollection(function (error, news_collection) {
+    if (error) callback(error)
+    //if new has pri -> then we have to update news with the same id. 
+    if (news.pri === 1 || news.pri === 2) {
+      //if news allready exsists we have to remove this so I don't mess of our later update of news with similar pri 
+      if (news._id) {
+        var objId = ObjectID.createFromHexString(news._id);
+        news_collection.remove({
+          '_id': objId
+        }, function (error, result) {
+          if (error) {
+            console.log(error);
+            callback(error);
+          } else {
+            console.log("Har fjernet eksiterende nyhet. Vil prøve å oppdatere nyheter med samme pri");
+            news_collection.update({pri : news.pri}, {$set : {pri : null}}, {w:1, multi : true}, function(error, num) {
+            if(error){
+              console.log("Oppdaterting av nyheter med samme pri gikk til helevete. Vil avbryte");
+              callback(error); 
+            }
+            console.log("Har oppdatert " + num + " med samme pri."); 
+            console.log("Vil nå lagre nyhet."); 
+            news_collection.save(news, function () {
+                    callback(null, news);
+                  });
+            });
+          }
+        });
+      }
+    }
+      } else {
+        console.log("Trenger ikke å fjerne ekisterende nyhet da denne ikke finnes");
+        var objectWithSamePri = news_collection.find({
+          pri: news.pri
+        });
+        objectWithSamePri.toArray(function (error, results) {
+          if (error) {
+            console.log("Kunne ikke hente nyheter med samme pri");
+            callback(error);
+          } else {
+            if (!results || results.length === 0) {
+              console.log("Resultat av nyheter med samme pri var tomt. Vil nå lagre ny nyhet");
+              news_collection.save(news, function () {
+                callback(null, news);
+              });
+            } else {
+              console.log("Resultat av nyheter med samme pri var " + results.length + " vil nå oppdatere");
+              for (var x = 0; x < results.length; x++) {
+                results[x].pri = null;
+                news_collection.update(results[x], function () {
+                  console.log("Oppdaterer nyhet " + x);
+                  if (x === results.length - 1)
+                    console.log("Forsøker å lagre ny nyhet");
+               
+              }
+            }
+          }
+        });
+      }
+    } else {
+      if (news._id) {
+        console.log("Nyhet har ingen pri, men må fjerne eksiternede nyhet med samme id");
+        var objId = ObjectID.createFromHexString(news._id);
+        var oldNews = news_collection.find({
+          'pri': news.pri
+        });
+        news_collection.remove({
+          '_id': objId
+        });
+        news.updatedDate = new Date();
+        news.createdDate = oldNews.createdDate;
+      }
+      console.log("Lagrer ny nyhet uten pri");
+      news_collection.save(news, function () {
+        callback(null, news);
+      });
+
+    }
+  });
+}
+
+
+
+
 
 //1) Sjekk om nyheten har pri -> i så fall 
-
+/*
 NewsProvider.prototype.saveNews = function (news, callback) {
     this.getCollection(function(error, news_collection) {
       if( error ) callback(error)
@@ -97,14 +249,19 @@ NewsProvider.prototype.saveNews = function (news, callback) {
                         news.createdDate = oldNews.createdDate;
                     }
                     if(!results || results.length === 0){
-                      results = []; 
+                        news_collection.save(news, function() {
+                             callback(null, news);
+                      });
                     }
                     console.log("kommer hit");
-                    results.push(news); 
+                 //   results.push(news); 
                     for(var x = 0;x<results.length;x++) {
+                      console.log(results[x]);
                        news_collection.update(results[x], function() {
-                        if(x === results.length-1)
-                           callback(null, news);
+                        if(x === results.length-1 )
+                             news_collection.save(news, function() {
+                             callback(null, news);
+                           });
                        });
                     }
               }
@@ -126,6 +283,6 @@ NewsProvider.prototype.saveNews = function (news, callback) {
 };
 
 
-
+*/
 
 exports.NewsProvider = NewsProvider;

@@ -6,12 +6,37 @@
 		<div class="panel-body">
 			<div>
 				<div class="well well-lg">
-					<h4>Legg til nyhtet</h4>
+					<h2 ng-show="isInEditMode">NB! Du er nå i endre modus</h2>
+					<h4 ng-hide="isInEditMode">Legg til nyhtet</h4>
+					<h4 ng-show="isInEditMode">Endre nyhet</h4>
 					<form class="form-horizontal" role="form">
+						<div class="form-group">
+							<label for="category"  class="col-lg-2 control-label">Velg kateogri</label>
+							<div class="col-lg-10">
+								<select ng-model="cat" id="category" ng-options="c.name for c in category">
+									<option value="">-- Kategori --</option>
+								</select>
+							</div>
+						</div>
 						<div class="form-group">
 							<label for="inputNavn" class="col-lg-2 control-label">Forfatter</label>
 							<div class="col-lg-10">
 								<input type="text" ng-model="selectedNews.author" class="form-control" id="inputNavn" placeholder="Forfatter"></div>
+						</div>
+						<div class="form-group" ng-show="isEvent()">
+							<label for="adresse" class="col-lg-2 control-label">Adresse</label>
+							<div class="col-lg-10">
+								<input type="text" ng-model="selectedNews.address" class="form-control" id="adresse" placeholder="Adresse for event"></div>
+						</div>
+						<div class="form-group" ng-show="isEvent()">
+							<label for="fra" class="col-lg-2 control-label">Fra</label>
+							<div class="col-lg-10">
+								<input type="text" ng-model="selectedNews.from" class="form-control" id="fra" placeholder="Fra"></div>
+						</div>
+						<div class="form-group" ng-show="isEvent()">
+							<label for="til" class="col-lg-2 control-label">Til</label>
+							<div class="col-lg-10">
+								<input type="text" ng-model="selectedNews.to" class="form-control" id="til" placeholder="Til"></div>
 						</div>
 						<div class="form-group">
 							<label for="inputNavn" class="col-lg-2 control-label">Tittel</label>
@@ -43,7 +68,7 @@
 								<textarea class="form-control" ng-model="selectedNews.imageText" id="inputTime" placeholder="Bilde tekst"/>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group" ng-show="isNyhet()">
 							<label for="pri"  class="col-lg-2 control-label">Velg prioritet på forisden</label>
 							<div class="col-lg-10">
 								<select ng-model="pri" id="pri" ng-options="c.name for c in priority">
@@ -54,6 +79,11 @@
 						<div class="form-group">
 							<div class="col-lg-offset-2 col-lg-10">
 								<button type="submit" class="btn btn-default" ng-click="saveNews(selectedNews)">Lagre nyhet til server</button>
+							</div>
+						</div>
+						<div class="form-group" ng-show="isInEditMode">
+							<div class="col-lg-offset-2 col-lg-10">
+								<button type="submit" class="btn btn-default" ng-click="cancelEdit()">Kanseler endring</button>
 							</div>
 						</div>
 					</form>
