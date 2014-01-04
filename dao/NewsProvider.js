@@ -23,7 +23,7 @@ NewsProvider = function (host, port) {
 
 
 
-NewsProvider.prototype.findNews = function(callback, pageSize,pageNumber) {
+NewsProvider.prototype.findNews = function(callback, pageSize,pageNumber,filter) {
     this.getCollection(function(error, news_collection) {
       if( error ) callback(error)
       else {
@@ -35,7 +35,11 @@ NewsProvider.prototype.findNews = function(callback, pageSize,pageNumber) {
               "skip": skip,
               "sort": [['pri','desc'], ['createdDate','-1']]
           };
-          var objects = news_collection.find({},options);
+          console.log("Henter med filter : " + filter);
+          if(filter === "1" || filter === "2" || filter === "3" )
+            var objects = news_collection.find({cat : filter},options);
+          else 
+            var objects = news_collection.find({},options);
           console.log("Henter nyheter");
           objects.toArray(function(error, results) {
          // console.log("Dette er result: " + results)
@@ -63,17 +67,18 @@ NewsProvider.prototype.findSingleNews = function(id, callback) {
 };
 
 
-/*
+
 NewsProvider.prototype.removeNews = function(news, callback) {
     this.getCollection(function(error, news_collection) {
       if( error ) callback(error)
       var objId = ObjectID.createFromHexString(news._id);
-      news_collection.remove({'_id' : objId}, function() {
+      news_collection.remove({'_id' : objId}, function(error) {
+            console.log("Dette er error "  + error);
             callback(null, news);
       });
-};
-*/
+});
 
+}
 
 NewsProvider.prototype.saveNews = function(news, callback) {
     this.getCollection(function(error, news_collection) {
@@ -97,7 +102,8 @@ NewsProvider.prototype.saveNews = function(news, callback) {
             }
             console.log("Har oppdatert " + num + " med samme pri."); 
             console.log("Vil nå lagre nyhet."); 
-            news_collection.save(news, function () {
+            news_collection.insert(news, function () {
+                    
                     callback(null, news);
                   });
             });
@@ -111,7 +117,8 @@ NewsProvider.prototype.saveNews = function(news, callback) {
             }
             console.log("Har oppdatert " + num + " med samme pri."); 
             console.log("Vil nå lagre nyhet."); 
-            news_collection.save(news, function () {
+            news_collection.insert(news, function () {
+                  
                     callback(null, news);
                   });
             });
@@ -119,20 +126,22 @@ NewsProvider.prototype.saveNews = function(news, callback) {
   } else {
       if (news._id) {
         console.log("Nyhet har ingen pri, men må fjerne eksiternede nyhet med samme id");
-        var objId = ObjectID.createFromHexString(news._id);
-        var oldNews = news_collection.find({
-          'pri': news.pri
-        });
-        news_collection.remove({
-          '_id': objId
-        });
+        var objId = news_collection.db.bson_serializer.ObjectID.createFromHexString(news._id);
+          console.log("title:" + objId);
         news.updatedDate = new Date();
-        news.createdDate = oldNews.createdDate;
-      }
-      console.log("Lagrer ny nyhet uten pri");
-      news_collection.save(news, function () {
+        news._id = objId;
+         news_collection.update({ _id :  news_collection.db.bson_serializer.ObjectID.createFromHexString(news._id) }, news, function (error,updated) {
+      
         callback(null, news);
       });
+
+      } else { 
+      console.log("Lagrer ny nyhet uten pri");
+      news_collection.insert(news, function () {
+        
+        callback(null, news);
+      });
+    }
   }
   });
 }

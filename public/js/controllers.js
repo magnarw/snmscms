@@ -157,6 +157,14 @@ function NewsAdminController($scope, $http, $timeout) {
     {name:'Event', value : 3},
   ];
 
+
+  $scope.filters = [
+    {name:'Nyhet', value: 1},
+    {name:'Byggeprosjektet', value : 2},
+    {name:'Event', value : 3},
+  ];
+
+
   /*
   $scope.addNews = function () {
     if($scope.pri)
@@ -176,6 +184,17 @@ function NewsAdminController($scope, $http, $timeout) {
           $scope.news = data; 
     }); 
   }
+
+  $scope.getNewsWithFilter = function (filter) {
+    $http({
+      url : '/api/news?filter='+ filter,
+      method: 'GET',
+      headers : 'Content-Type : application/json'
+    }).success(function(data){
+          $scope.news = data; 
+    }); 
+  }
+
 
   //TODO : Post with a query paramter if the image has not been changed. 
   $scope.saveNews = function (news) {
@@ -202,25 +221,48 @@ function NewsAdminController($scope, $http, $timeout) {
       headers: {'Content-Type': false}
     }).success(function(data){
         //TODO : Loop through all news to see if it's allready exsists in the list, if not add it. 
-        var shouldAdd = true; 
-        for(var i=0; i<$scope.news.length;i++) {
-          console.log("jobber i for loopn")
-          if($scope.selectedNews._id === news._id) {
-
-            shouldAdd = false; 
-          }
+        if($scope.filter) { 
+         $scope.getNewsWithFilter($scope.filter.value);}
+        else {
+           $scope.getNews();
         }
-        if(shouldAdd === true)
-         $scope.news.push(news);
+        $scope.cancelEdit();
         alert("Nyhet har blitt lagret på servern");
     }).error(function (error) {
        alert("Noe gikk galt ved lagring av nyhet. Kontakt Magnar på 46793283"); 
     }); 
   };
 
+
+  $scope.deleteNews = function (news) {
+   
+    $http({
+      url : '/admin/api/news/remove',
+      method: 'POST',
+      data : news,
+      headers: {'Content-Type': 'application/json'}
+    }).success(function(data){
+        //TODO : Loop through all news to see if it's allready exsists in the list, if not add it. 
+        if($scope.filter) { 
+            $scope.getNewsWithFilter($scope.filter.value);}
+          else {
+            $scope.getNews();
+        }
+        alert("Nyhet har blitt slettet fra servern");
+    }).error(function (error) {
+       alert("Noe gikk galt ved sletting av nyhet. Kontakt Magnar på 46793283"); 
+    }); 
+  };
+
+
+
+
+
   $scope.cancelEdit = function () {
     $scope.isInEditMode = false; 
     $scope.selectedNews = {};
+    $scope.image = ""; 
+    $scope.newArticleImage = null;
     $scope.cat = $scope.category[0];
   };
 
@@ -282,7 +324,15 @@ function NewsAdminController($scope, $http, $timeout) {
     return $scope.cat && $scope.cat.value === 3; 
   };
 
-  $scope.getNews();
+  $scope.$watch('filter', function() {
+    if($scope.filter) { 
+      $scope.getNewsWithFilter($scope.filter.value);}
+    else {
+      $scope.getNews();
+    }
+  }); // initialize the watch
+
+ 
   $scope.cancelEdit();
 
 }

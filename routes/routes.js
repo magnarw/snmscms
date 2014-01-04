@@ -109,6 +109,7 @@ exports.findNews = function (req, res) {
   } else { 
   var pageSize = req.query.pageSize;
   var pageNumber = req.query.pageNumber;
+  var filter = req.query.filter;
   newsProvider.findNews(function (error, news){
     if(error || news.length === 0) {
         res.json([]);
@@ -116,7 +117,7 @@ exports.findNews = function (req, res) {
     else { 
       res.json(news);
     }
-  },pageSize,pageNumber);
+  },pageSize,pageNumber,filter);
  }
 }
 
@@ -158,7 +159,6 @@ exports.saveNews = function (req, res) {
 
 
 exports.removeNews = function (req, res) {
-    var json = JSON.parse(req.body.model);
     var news = req.body;
     newsProvider.removeNews(news,function(error, result){
       res.json({'message' : 'This went ok'}); 

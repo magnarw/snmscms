@@ -22,6 +22,7 @@ app.get('/api/news', routes.findNews);
 
 app.post('/admin/api/news', routes.saveNews);
 
+app.post('/admin/api/news/remove', routes.removeNews);
 
 app.get('/api/prayer/year/:year/month/:month/day/:day', routes.findPrey);
 app.post('/admin/api/prayer', routes.savePrey);
