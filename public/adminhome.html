@@ -26,9 +26,8 @@
       </div>
       <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#preytimes">Bønnetider</a></li>
-          <li><a href="#holidays">Heligdager</a></li>
-          <li><a href="#news">Nyheter</a></li>
+          <li id="jummabar"><a  href="#holidays">Fredagsbønn</a></li>
+          <li id="newsbar"><a href="#news">Nyheter</a></li>
         </ul>
       </div>
     </div>
@@ -51,5 +50,22 @@
 	  <script src="js/services.js"></script>
 	</body>
 
+
+  <script>
+    $( document ).ready(function() {
+        console.log( "document loaded" );
+        $("#jummabar").click(function() {
+          $("#jummabar").addClass('active'); 
+          $("#newsbar").removeClass("active"); 
+        });
+
+        $("#newsbar").click(function() {
+          $("#newsbar").addClass('active'); 
+          $("#jummabar").removeClass("active"); 
+        });
+
+    });
+ 
+    </script>
 
 </html>

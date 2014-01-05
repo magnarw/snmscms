@@ -62,7 +62,7 @@ HolidaysProvider.prototype.saveHolidays = function(holidays, callback) {
           var holiday = holidays[x];
           if(holiday._id) { 
             var objId = ObjectID.createFromHexString(holiday._id);
-            holidays_collection.remove({'_id' : objId});
+            holiday._id = objId;
           }
           holidays_collection.save(holiday, function() {
             callback(null, holiday);

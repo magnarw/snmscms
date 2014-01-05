@@ -86,6 +86,7 @@ function HolidaysAdminController($scope, $http, $timeout) {
   $scope.addHoliday = function () {
     var holiday = {fromMonth : $scope.fromMonth, toMonth : $scope.toMonth, fromDay : $scope.fromDay, toDay : $scope.toDay, hours : $scope.hours, minuttes : $scope.min};
     $scope.holidays.push(holiday);
+    $scope.saveHolidays();
   };
 
 
@@ -290,7 +291,9 @@ function NewsAdminController($scope, $http, $timeout) {
     $scope.cat = null;
     if(news.pri) {
       for(var i = 0; i<$scope.priority.length;i++) {
+         console.log("Kommer inn her");
         if($scope.priority[i].value===news.pri){
+           console.log("Kommer indfdfn her");
           $scope.pri = $scope.priority[i];
         }
       }
@@ -299,7 +302,7 @@ function NewsAdminController($scope, $http, $timeout) {
       for(var i = 0; i<$scope.category.length;i++) {
         if($scope.category[i].value===news.cat){
           console.log("Kommer inn her");
-          $scope.cat = $scope.cat[i];
+          $scope.cat = $scope.category[i];
         }
       }
     } 

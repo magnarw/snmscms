@@ -88,14 +88,6 @@ NewsProvider.prototype.saveNews = function(news, callback) {
       //if news allready exsists we have to remove this so I don't mess of our later update of news with similar pri 
       if (news._id) {
         var objId = ObjectID.createFromHexString(news._id);
-        news_collection.remove({
-          '_id': objId
-        }, function (error, result) {
-          if (error) {
-            console.log(error);
-            callback(error);
-          } else {
-            console.log("Har fjernet eksiterende nyhet. Vil prøve å oppdatere nyheter med samme pri");
             news_collection.update({pri : news.pri}, {$set : {pri : null}}, {w:1, multi : true}, function(error, num) {
             if(error){
               console.log("Oppdaterting av nyheter med samme pri gikk til helevete. Vil avbryte");
@@ -103,13 +95,12 @@ NewsProvider.prototype.saveNews = function(news, callback) {
             }
             console.log("Har oppdatert " + num + " med samme pri."); 
             console.log("Vil nå lagre nyhet."); 
-            news_collection.insert(news, function () {
+            news._id = objId;
+            news_collection.update({ _id :  objId },news, function () {
                     
                     callback(null, news);
                   });
             });
-          }
-        });
       } else {
             news_collection.update({pri : news.pri}, {$set : {pri : null}}, {w:1, multi : true}, function(error, num) {
             if(error){
