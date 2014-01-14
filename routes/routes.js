@@ -137,7 +137,7 @@ exports.saveNews = function (req, res) {
           });
     }
     var json = JSON.parse(req.body.model);
-    var news = {'title' : json.title, 'text' : json.text, 'createdDate' : new Date(),  'pri' : json.pri, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : 'http://46.137.184.176:3000/uploads/' + req.files.file.name }
+    var news = {'title' : json.title, 'text' : json.text, 'createdDate' : new Date(),  'pri' : json.pri, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : 'http://46.137.184.176:3000/uploads/' + req.files.file.name,'address' : json.address, 'from' : json.from, 'to' : json.to, 'lat' : json.lat, 'lng' : json.lng, 'showMap' : json.showMap};
     if(json._id) {
       news._id = json._id; 
     }
@@ -147,7 +147,7 @@ exports.saveNews = function (req, res) {
   });
   } else {
     var json = JSON.parse(req.body.model);
-    var news = {'title' : json.title, 'text' : json.text, 'createdDate' : new Date(),  'pri' : json.pri, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : json.imgUrl};
+    var news = {'title' : json.title, 'text' : json.text, 'createdDate' : new Date(),  'pri' : json.pri, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : json.imgUrl, 'address' : json.address,'from' : json.from, 'to' : json.to, 'lat' : json.lat, 'lng' : json.lng, 'showMap' : json.showMap};
     if(json._id) {
       news._id = json._id; 
     }

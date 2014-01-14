@@ -21,3 +21,23 @@ directives.directive('fileUpload', function () {
     };
 });
 
+
+directives.directive('googlePlaces', function(){
+                return {
+                    restrict:'E',
+                    replace:true,
+                    // transclude:true,
+                    scope: {lat:'=',lng : '=', address : '='},
+                    template: '<input id="google_places_ac" name="google_places_ac" type="text" class="form-control" id="inputNavn" placeholder="Addresse for event"/>',
+                    link: function($scope, elm, attrs){
+                        var autocomplete = new google.maps.places.Autocomplete($("#google_places_ac")[0], {});
+                        google.maps.event.addListener(autocomplete, 'place_changed', function() {
+                            var place = autocomplete.getPlace();
+                            $scope.lat = place.geometry.location.lat();
+                            $scope.lng = place.geometry.location.lng();
+                            $scope.address = $("#google_places_ac").val();
+                            $scope.$apply();
+                        });
+                    }
+                }
+});

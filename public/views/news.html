@@ -25,18 +25,31 @@
 						</div>
 						<div class="form-group" ng-show="isEvent()">
 							<label for="adresse" class="col-lg-2 control-label">Adresse</label>
-							<div class="col-lg-10">
-								<input type="text" ng-model="selectedNews.address" class="form-control" id="adresse" placeholder="Adresse for event"></div>
+							<div class="col-lg-4">
+								<google-places address="selectedNews.address" lat="selectedNews.lat" lng="selectedNews.lng"></google-places>
+							</div>
+							<div class="col-lg-3">
+								   Vis kart i app: <input type="checkbox" ng-model="selectedNews.showMap"> <br/>
+							</div>
+						</div>
+						<div class="form-group" ng-show="isEvent()">
+							<label for="adresse" class="col-lg-2 control-label"></label>
+							<div class="col-lg-3">
+								<span>Lat <strong>{{selectedNews.lat}}</strong></span>
+								<span>Long <strong>{{selectedNews.lng}}</strong></span>
+							</div>
 						</div>
 						<div class="form-group" ng-show="isEvent()">
 							<label for="fra" class="col-lg-2 control-label">Fra</label>
 							<div class="col-lg-10">
-								<input type="text" ng-model="selectedNews.from" class="form-control" id="fra" placeholder="Fra"></div>
+								<datetimepicker id="fra"  data-on-set-time="onTimeSet" data-ng-model="selectedNews.from" ></datetimepicker>
+							</div>
 						</div>
 						<div class="form-group" ng-show="isEvent()">
 							<label for="til" class="col-lg-2 control-label">Til</label>
 							<div class="col-lg-10">
-								<input type="text" ng-model="selectedNews.to" class="form-control" id="til" placeholder="Til"></div>
+								<datetimepicker id="fra"  data-on-set-time="onTimeSet" data-ng-model="selectedNews.to" ></datetimepicker>
+							</div>
 						</div>
 						<div class="form-group">
 							<label for="inputNavn" class="col-lg-2 control-label">Tittel</label>
