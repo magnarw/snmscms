@@ -130,7 +130,7 @@ exports.uploadImage = function (req, res) {
             console.log(err)
             if (err) throw err;
             console.log("Upload completed!");
-            res.json({'imageUrl' : 'http://localhost:3000/uploads/' + req.files.file.name });
+            res.json({'imageUrl' : 'http://46.137.184.176:3000/uploads/' + req.files.file.name });
      });
   }
 };
