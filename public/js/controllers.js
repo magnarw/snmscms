@@ -172,11 +172,12 @@ function HolidaysAdminController($scope, $http, $timeout) {
 }
 
 
-function NewsAdminController($scope, $http, $timeout) {
+function NewsAdminController($scope, $http, $timeout,$upload) {
 
     $scope.news = [];
     $scope.newArticleImage;
     $scope.image;
+    $scope.images = [];
 
     $scope.priority = [{
         name: 'Forsiden 1',
@@ -210,15 +211,40 @@ function NewsAdminController($scope, $http, $timeout) {
     }, ];
 
 
-    /*
-  $scope.addNews = function () {
-    if($scope.pri)
-       var newNewsItem  = {title : $scope.newTitle, text : $scope.newText, ingress : $scope.newIngress, imageText : $scope.newImageText, author : $scope.newAuthor, pri : $scope.pri.value };
-    else 
-       var newNewsItem  = {title : $scope.newTitle, text : $scope.newText, ingress : $scope.newIngress, imageText : $scope.newImageText, author : $scope.newAuthor};
-    $scope.saveNews(newNewsItem);
-  };
-  */
+    $scope.backgroundChange = function(image) {
+      for(var i = 0;i<$scope.images.length;i++){
+        if($scope.images[i].imageUrl!==image.imageUrl){
+          $scope.images[i].background = false;
+        }
+      }
+
+    };
+
+    $scope.articleChanged = function(image) {
+      for(var i = 0;i<$scope.images.length;i++){
+        if($scope.images[i].imageUrl!==image.imageUrl){
+          $scope.images[i].article = false;
+        }
+      }
+
+    };
+
+    var getBackgroundImage = function(){
+      for(var i = 0;i<$scope.images.length;i++){
+        if($scope.images[i].background === true){
+            return $scope.images[i];
+        }
+      }
+    };
+
+   var getArticleImage = function(){
+      for(var i = 0;i<$scope.images.length;i++){
+        if($scope.images[i].article === true){
+            return $scope.images[i];
+        }
+      }
+    };
+
 
     $scope.getNews = function() {
         $http({
@@ -248,27 +274,26 @@ function NewsAdminController($scope, $http, $timeout) {
         if ($scope.cat)
             news.cat = $scope.cat.value;
 
-        var urlToPost = '/admin/api/news?imageHasChanged=false';
-        if ($scope.imageHasChanged) {
-            urlToPost = '/admin/api/news?imageHasChanged=true'
+        if(getArticleImage()){
+          var articleImage = getArticleImage();
+          news.articleImageUrl = articleImage.imageUrl; 
+          news.articleImageText = articleImage.imageText; 
         }
 
+        if(getBackgroundImage()){
+          var bgImage = getBackgroundImage();
+          news.imgUrl = bgImage.imageUrl; 
+          news.imageText = bgImage.imageText; 
+        };
+
+
+        var urlToPost = '/admin/api/news';
         $http({
             url: urlToPost,
             method: 'POST',
-            transformRequest: function(data) {
-                var formData = new FormData();
-                formData.append("model", angular.toJson(data.model));
-                formData.append("file", data.file);
-                return formData;
-            },
-            data: {
-                model: news,
-                file: $scope.newArticleImage
-            },
-            headers: {
-                'Content-Type': false
-            }
+            headers: 'Content-Type : application/json',
+            data : news
+            
         }).success(function(data) {
             //TODO : Loop through all news to see if it's allready exsists in the list, if not add it. 
             if ($scope.filter) {
@@ -285,7 +310,6 @@ function NewsAdminController($scope, $http, $timeout) {
 
 
     $scope.deleteNews = function(news) {
-
         $http({
             url: '/admin/api/news/remove',
             method: 'POST',
@@ -316,6 +340,7 @@ function NewsAdminController($scope, $http, $timeout) {
     $scope.cancelEdit = function() {
         $scope.isInEditMode = false;
         $scope.selectedNews = {};
+        $scope.images = [];
         $scope.image = "";
         $scope.newArticleImage = null;
         $scope.cat = $scope.category[0];
@@ -324,6 +349,15 @@ function NewsAdminController($scope, $http, $timeout) {
     $scope.editNews = function(news) {
         $scope.isInEditMode = true;
         $scope.imageHasChanged = false;
+
+        if(news.imgUrl){
+          $scope.images.push({'imageText' : news.imageText, 'background' : true, 'imageUrl' : news.imgUrl});
+        }
+
+        if(news.articelImageUrl){
+          $scope.images.push({'imageText' : news.articelImageText, 'article' : true, 'imageUrl' : news.articelImageUrl});
+        }
+
         $scope.image = news.imgUrl;
         $scope.selectedNews = news;
         $scope.pri = null;
@@ -346,28 +380,33 @@ function NewsAdminController($scope, $http, $timeout) {
             }
         }
 
-
     };
 
 
-    //1) Du trenger ikke å laste opp bildet på nytt. Bare sjekk at det ikke har blitt endret. 
-    $scope.$on("fileSelected", function(event, args) {
-        var reader = new FileReader();
-        $scope.$apply(function() {
-            //add the file object to the scope's files collection
-            $scope.newArticleImage = args.file;
-            // Closure to capture the file information.
-            reader.onload = (function(theFile) {
-                return function(e) {
-                    $scope.image = e.target.result;
-                    $scope.imageHasChanged = true;
-                    $scope.$apply();
-                };
-            })();
-        });
-        reader.readAsDataURL($scope.newArticleImage);
-
-    });
+    $scope.onFileSelect = function($files) {
+    //$files: an array of files selected, each file has name, size, and type.
+    for (var i = 0; i < $files.length; i++) {
+      var file = $files[i];
+      $scope.upload = $upload.upload({
+        url: '/admin/api/upload', //upload.php script, node.js route, or servlet url
+        method: 'POST',
+        // headers: {'headerKey': 'headerValue'}, withCredential: true,
+        file: file,
+        // file: $files, //upload multiple files, this feature only works in HTML5 FromData browsers
+        /* set file formData name for 'Content-Desposition' header. Default: 'file' */
+        //fileFormDataName: myFile, //OR for HTML5 multiple upload only a list: ['name1', 'name2', ...]
+        /* customize how data is added to formData. See #40#issuecomment-28612000 for example */
+        //formDataAppender: function(formData, key, val){} 
+      }).progress(function(evt) {
+        console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
+      }).success(function(data, status, headers, config) {
+        $scope.images.push(data);
+        console.log(data);
+      });
+      //.error(...)
+      //.then(success, error, progress); 
+    }
+   }; 
 
 
     $scope.location = '';

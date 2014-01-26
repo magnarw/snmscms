@@ -29,14 +29,20 @@
 								<google-places address="selectedNews.address" lat="selectedNews.lat" lng="selectedNews.lng"></google-places>
 							</div>
 							<div class="col-lg-3">
-								   Vis kart i app: <input type="checkbox" ng-model="selectedNews.showMap"> <br/>
+								Vis kart i app:
+								<input type="checkbox" ng-model="selectedNews.showMap">
+								<br/>
 							</div>
 						</div>
 						<div class="form-group" ng-show="isEvent()">
 							<label for="adresse" class="col-lg-2 control-label"></label>
 							<div class="col-lg-3">
-								<span>Lat <strong>{{selectedNews.lat}}</strong></span>
-								<span>Long <strong>{{selectedNews.lng}}</strong></span>
+								<span>
+									Lat <strong>{{selectedNews.lat}}</strong>
+								</span>
+								<span>
+									Long <strong>{{selectedNews.lng}}</strong>
+								</span>
 							</div>
 						</div>
 						<div class="form-group" ng-show="isEvent()">
@@ -69,63 +75,76 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="exampleInputFile" class="col-lg-2 control-label">Velg bilde</label>
+							<label for="exampleInputFile" class="col-lg-2 control-label">Velg bilder</label>
 							<div class="col-lg-10">
-								<input type="file"  file-upload id="exampleInputFile" />
-								<img ng-src="{{image}}" width="250px" height="250px"/>
-							</div>
+								<input type="file" ng-file-select="onFileSelect($files)" ></div>
 						</div>
 						<div class="form-group">
-							<label for="inputTime"  class="col-lg-2 control-label">Bildetekst</label>
+							<label for="inputTime"  class="col-lg-2 control-label"></label>
 							<div class="col-lg-10">
-								<textarea class="form-control" ng-model="selectedNews.imageText" id="inputTime" placeholder="Bilde tekst"/>
-							</div>
-						</div>
-						<div class="form-group" ng-show="isNyhet()">
-							<label for="pri"  class="col-lg-2 control-label">Velg prioritet på forisden</label>
-							<div class="col-lg-10">
-								<select ng-model="pri" id="pri" ng-options="c.name for c in priority">
-									<option value="">-- Prioritet --</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-lg-offset-2 col-lg-10">
-								<button type="submit" class="btn btn-default" ng-click="saveNews(selectedNews)">Lagre nyhet til server</button>
-							</div>
-						</div>
-						<div class="form-group" ng-show="isInEditMode">
-							<div class="col-lg-offset-2 col-lg-10">
-								<button type="submit" class="btn btn-default" ng-click="cancelEdit()">Kanseler endring</button>
-							</div>
-						</div>
-					</form>
-				</div>
-			</div>
-			<div>
-				<h4>Nyheter på serveren</h4>
-				<label for="filter"  class="col-lg-2 control-label">Filtrer på kategori</label>
-				<div class="col-lg-10">
-					<select ng-model="filter" id="filter" ng-options="c.name for c in filters">
-						<option value="">-- Ingen filter --</option>
-					</select>
-				</div>
-				<table>
-					<tr>
-						<th>Tittel</th>
-						<th>Endre</th>
-						<th>Slett</th>
-					</tr>
-					<tr ng-repeat="newsItem in news">
-						<td>{{newsItem.title}}</td>
-						<td>
-							<button type="submit" class="btn btn-default" ng-click="editNews(newsItem)">Endre</button>
-						</td>
-						<td>
-							<button type="submit" class="btn btn-default" ng-click="deleteNews(newsItem)">Slett</button>
-						</td>
-					</tr>
-				</table>
-			</div>
+								<ul class="list-group">
+									<li  ng-repeat="image in images"class="list-group-item">
+										<img height="42" width="42" src="{{image.imageUrl}}"/>
+										Bruk som bakgrunn : 
+										<input type="checkbox" ng-model="image.background"  ng-change="backgroundChange(image)" />
+										Bruk som artikkelbilde : 
+										<input type="checkbox" ng-model="image.article" ng-change="articleChanged(image)"/>
+										<p>
+											<textarea class="form-control download" ng-model="image.imageText" id="inputTime" placeholder="Bildetekst"/>
+										</p>
+									</li>
 
+								</ul>
+							</div>
+							<!--div class="col-lg-10">
+							<textarea class="form-control" ng-model="selectedNews.imageText" id="inputTime" placeholder="Bilde tekst"/>
+						</div-->
+					</div>
+					<div class="form-group" ng-show="isNyhet()">
+						<label for="pri"  class="col-lg-2 control-label">Velg prioritet på forisden</label>
+						<div class="col-lg-10">
+							<select ng-model="pri" id="pri" ng-options="c.name for c in priority">
+								<option value="">-- Prioritet --</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-lg-offset-2 col-lg-10">
+							<button type="submit" class="btn btn-default" ng-click="saveNews(selectedNews)">Lagre nyhet til server</button>
+						</div>
+					</div>
+					<div class="form-group" ng-show="isInEditMode">
+						<div class="col-lg-offset-2 col-lg-10">
+							<button type="submit" class="btn btn-default" ng-click="cancelEdit()">Kanseler endring</button>
+						</div>
+					</div>
+				</form>
+			</div>
 		</div>
+		<div>
+			<h4>Nyheter på serveren</h4>
+			<label for="filter"  class="col-lg-2 control-label">Filtrer på kategori</label>
+			<div class="col-lg-10">
+				<select ng-model="filter" id="filter" ng-options="c.name for c in filters">
+					<option value="">-- Ingen filter --</option>
+				</select>
+			</div>
+			<table>
+				<tr>
+					<th>Tittel</th>
+					<th>Endre</th>
+					<th>Slett</th>
+				</tr>
+				<tr ng-repeat="newsItem in news">
+					<td>{{newsItem.title}}</td>
+					<td>
+						<button type="submit" class="btn btn-default" ng-click="editNews(newsItem)">Endre</button>
+					</td>
+					<td>
+						<button type="submit" class="btn btn-default" ng-click="deleteNews(newsItem)">Slett</button>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+	</div>

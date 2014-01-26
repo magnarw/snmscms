@@ -2,7 +2,7 @@
 
 
 // Declare app level module which depends on filters, and services
-angular.module('myApp', ['myApp.filters','episodeService','ngResource','ui.bootstrap','ngGrid','myApp.directives','ui.bootstrap.datetimepicker']).
+angular.module('myApp', ['myApp.filters','episodeService','ngResource','ui.bootstrap','ngGrid','myApp.directives','ui.bootstrap.datetimepicker','angularFileUpload']).
   config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
     $routeProvider.when("/preytimes", {templateUrl: "views/prey.html", controller: PreyAdminController});
     $routeProvider.when("/holidays", {templateUrl: "views/holidays.html", controller: HolidaysAdminController});

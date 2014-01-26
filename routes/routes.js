@@ -121,33 +121,24 @@ exports.findNews = function (req, res) {
  }
 }
 
-exports.saveNews = function (req, res) {
-
-  var uploadnewImage = req.query.imageHasChanged;
-
-  if(uploadnewImage === "true") { 
+exports.uploadImage = function (req, res) {
   appDir = path.dirname(require.main.filename);
-    var tempPath = req.files.file.path;
-    targetPath = path.resolve(appDir +'/public/uploads/' +req.files.file.name);
-     if (path.extname(req.files.file.name).toLowerCase() === '.jpg' || path.extname(req.files.file.name).toLowerCase() === '.gif'  || path.extname(req.files.file.name).toLowerCase() === '.png') {
-        fs.rename(tempPath, targetPath, function(err) {
+  var tempPath = req.files.file.path;
+  targetPath = path.resolve(appDir +'/public/uploads/' +req.files.file.name);
+  if (path.extname(req.files.file.name).toLowerCase() === '.jpg' || path.extname(req.files.file.name).toLowerCase() === '.gif'  || path.extname(req.files.file.name).toLowerCase() === '.png') {
+    fs.rename(tempPath, targetPath, function(err) {
             console.log(err)
             if (err) throw err;
             console.log("Upload completed!");
-          });
-    }
-    var json = JSON.parse(req.body.model);
-    var news = {'title' : json.title, 'text' : json.text, 'createdDate' : new Date(),  'pri' : json.pri, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : 'http://46.137.184.176:3000/uploads/' + req.files.file.name,'address' : json.address, 'from' : json.from, 'to' : json.to, 'lat' : json.lat, 'lng' : json.lng, 'showMap' : json.showMap};
-    if(json._id) {
-      news._id = json._id; 
-    }
-    news.cat =  json.cat;
-    newsProvider.saveNews(news,function(error, result){
-      res.json({'message' : 'This went ok'}); 
-  });
-  } else {
-    var json = JSON.parse(req.body.model);
-    var news = {'title' : json.title, 'text' : json.text, 'createdDate' : new Date(),  'pri' : json.pri, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : json.imgUrl, 'address' : json.address,'from' : json.from, 'to' : json.to, 'lat' : json.lat, 'lng' : json.lng, 'showMap' : json.showMap};
+            res.json({'imageUrl' : 'http://localhost:3000/uploads/' + req.files.file.name });
+     });
+  }
+};
+
+
+exports.saveNews = function (req, res) {
+    var json = req.body;
+    var news = {'articleImageUrl' : json.articleImageUrl,'articleImageText' : json.articleImageText, 'title' : json.title, 'text' : json.text, 'createdDate' : new Date(),  'pri' : json.pri, 'ingress' : json.ingress, 'imageText' : json.imageText, 'author' : json.author, 'imgUrl' : json.imgUrl, 'address' : json.address,'from' : json.from, 'to' : json.to, 'lat' : json.lat, 'lng' : json.lng, 'showMap' : json.showMap};
     if(json._id) {
       news._id = json._id; 
     }
@@ -155,7 +146,7 @@ exports.saveNews = function (req, res) {
     newsProvider.saveNews(news,function(error, result){
       res.json({'message' : 'This went ok'}); 
     });
-  }
+ 
 }
 
 
