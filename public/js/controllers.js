@@ -354,8 +354,8 @@ function NewsAdminController($scope, $http, $timeout,$upload) {
           $scope.images.push({'imageText' : news.imageText, 'background' : true, 'imageUrl' : news.imgUrl});
         }
 
-        if(news.articelImageUrl){
-          $scope.images.push({'imageText' : news.articelImageText, 'article' : true, 'imageUrl' : news.articelImageUrl});
+        if(news.articleImageUrl){
+          $scope.images.push({'imageText' : news.articleImageText, 'article' : true, 'imageUrl' : news.articleImageUrl});
         }
 
         $scope.image = news.imgUrl;
